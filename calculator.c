@@ -22,8 +22,8 @@ Data Read(int symbol);
 Data Cal();
 
 char input;
-StackMember E={1,123};
-StackMember Pi={1,123};
+Data E={1,123};
+Data Pi={1,123};
 
 int main()
 {
@@ -117,6 +117,22 @@ Data Sin(Data x)
     return rlt;
 }
 
+Data LogProcessor()
+{
+    Data rlt;
+    rlt.number=10;
+    rlt.symbol=1;
+    input=getchar();
+    switch (input)
+    {
+        case 'o': getchar(); rlt=Log(Read(1),Read(1)); break;
+        case 'n': rlt=Log(E,Read(1)); break;
+        case 'g': rlt=Log(rlt,Read(1)); break;
+        default: perror("no such function!\n"); exit(-1);
+    }
+    return rlt;
+}
+
 Data FunctionProcessor()
 {
     Data rlt;
@@ -136,7 +152,7 @@ Data Read(int symbol)
 	Data rlt;
     rlt.symbol=symbol;
     rlt.number=0;
-	while((input=getchar())==' ');
+    input=getchar();
     if(input=='('){
         rlt=Cal();
         rlt.symbol=symbol*rlt.symbol;
