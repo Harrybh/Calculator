@@ -125,10 +125,19 @@ Data LogProcessor()
     input=getchar();
     switch (input)
     {
-        case 'o': getchar(); rlt=Log(Read(1),Read(1)); break;
-        case 'n': rlt=Log(E,Read(1)); break;
-        case 'g': rlt=Log(rlt,Read(1)); break;
-        default: perror("no such function!\n"); exit(-1);
+        case 'o':
+            getchar();
+            rlt=Log(Read(1),Read(1));
+            break;
+        case 'n':
+            rlt=Log(E,Read(1));
+            break;
+        case 'g':
+            rlt=Log(rlt,Read(1));
+            break;
+        default:
+            perror("no such function!\n");
+            exit(-1);
     }
     return rlt;
 }
@@ -137,12 +146,24 @@ Data FunctionProcessor()
 {
     Data rlt;
     switch(input){
-        case 's': rlt=Sin(Read(1)); break;
-        case 'c': rlt=Cos(Read(1)); break;
-        case 't': rlt=Tan(Read(1)); break;
-        case 'S': rlt=Sqrt(Read(1)); break;
-        case 'l': rlt=LogProcessor(); break;
-        default: perror("no such function!\n"); exit(-1);
+        case 's':
+            rlt=Sin(Read(1));
+            break;
+        case 'c':
+            rlt=Cos(Read(1)); 
+            break;
+        case 't':
+            rlt=Tan(Read(1));
+            break;
+        case 'S':
+            rlt=Sqrt(Read(1));
+            break;
+        case 'l':
+            rlt=LogProcessor();
+            break;
+        default:
+            perror("no such function!\n"); 
+            exit(-1);
     }
     return rlt;
 }
@@ -156,26 +177,28 @@ Data Read(int symbol)
     if(input=='('){
         rlt=Cal();
         rlt.symbol=symbol*rlt.symbol;
-        return rlt;
     }
-    if(input<='z'&&input>='a'){
-        return FunctionProcessor();
+    else if(input<='z'&&input>='a'){
+        rlt=FunctionProcessor();
+        rlt.symbol=symbol*rlt.symbol;
     }
-    if(input=='-'){
-        rlt.symbol=-1;
-        input=getchar();
+    else{
+        if(input=='-'){
+            rlt.symbol=-1;
+            input=getchar();
+        }
+        if(input>'9'||input<'0'){
+            perror("syntax error!\n");
+            exit(-1);
+        }
+        while(input<='9'&&input>='0'){
+            rlt.number*=10;
+            rlt.number+=input-'0';
+            input=getchar();
+        }
+        if(input=='^')
+            rlt=Pow(rlt,Read(1));
     }
-    if(input>'9'||input<'0'){
-        perror("syntax error!\n");
-        exit(-1);
-    }
-	while(input<='9'&&input>='0'){
-		rlt.number*=10;
-		rlt.number+=input-'0';
-        input=getchar();
-	}
-    if(input=='^')
-        rlt=Pow(rlt,Read(1));
 	return rlt;
 }
 
@@ -185,13 +208,31 @@ Data Cal()
 	Push(st,InitStackMember(Read(1)));
 	while(input!='\n'&&input!=')'){
 		switch(input){
-			case '+': Push(st,InitStackMember(Read(1))); break;
-			case '-': Push(st,InitStackMember(Read(-1))); break;
-			case '*': Top(st)->data=Mul(Top(st)->data,Read(1)); break;
-			case '/': Top(st)->data=Div(Top(st)->data,Read(1)); break;
-            case '%': Top(st)->data=Mod(Top(st)->data,Read(1)); break;
-            case '!': Top(st)->data=Fac(Top(st)->data); input=getchar(); break;
-			default: perror("illegal word!\n"); exit(-1);
+			case '+':
+                Push(st,InitStackMember(Read(1)));
+                break;
+			case '-':
+                Push(st,InitStackMember(Read(-1)));
+                break;
+			case '*':
+                Top(st)->data=Mul(Top(st)->data,Read(1));
+                break;
+			case '/':
+                Top(st)->data=Div(Top(st)->data,Read(1));
+                break;
+            case '%':
+                Top(st)->data=Mod(Top(st)->data,Read(1));
+                break;
+            case '!': 
+                Top(st)->data=Fac(Top(st)->data); input=getchar(); 
+                if(input>='0'&&input<='9'){
+                    perror("syntax error!\n");
+                    exit(-1);
+                } 
+                break;
+			default:
+                perror("illegal word!\n");
+                exit(-1);
 		}
 	}
     if(input==')') input=getchar();
