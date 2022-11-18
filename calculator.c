@@ -8,10 +8,22 @@ Data Add(Data a,Data b);
 Data Sub(Data a,Data b);
 Data Mul(Data a,Data b);
 Data Div(Data a,Data b);
+Data Mod(Data a,Data b);
+Data Pow(Data a,Data b);
+Data Log(Data a,Data b);
+Data Fac(Data x);
+Data Sin(Data x);
+Data Cos(Data x);
+Data Tan(Data x);
+Data Sqrt(Data x);
+Data LogProcessor();
+Data FunctionProcessor();
 Data Read(int symbol);
 Data Cal();
 
 char input;
+StackMember E={1,123};
+StackMember Pi={1,123};
 
 int main()
 {
@@ -65,6 +77,14 @@ Data Div(Data a,Data b)
     return rlt;
 }
 
+Data Mod(Data a,Data b)
+{
+    Data rlt;
+    rlt.number=0;
+    rlt.symbol=0;
+    return rlt;
+}
+
 Data Pow(Data a,Data b)
 {
     Data rlt;
@@ -89,6 +109,28 @@ Data Fac(Data x)
     return rlt;
 }
 
+Data Sin(Data x)
+{
+    Data rlt;
+    rlt.number=0;
+    rlt.symbol=0;
+    return rlt;
+}
+
+Data FunctionProcessor()
+{
+    Data rlt;
+    switch(input){
+        case 's': rlt=Sin(Read(1)); break;
+        case 'c': rlt=Cos(Read(1)); break;
+        case 't': rlt=Tan(Read(1)); break;
+        case 'S': rlt=Sqrt(Read(1)); break;
+        case 'l': rlt=LogProcessor(); break;
+        default: perror("no such function!\n"); exit(-1);
+    }
+    return rlt;
+}
+
 Data Read(int symbol)
 {
 	Data rlt;
@@ -97,8 +139,15 @@ Data Read(int symbol)
 	while((input=getchar())==' ');
     if(input=='('){
         rlt=Cal();
-        rlt.symbol=symbol;
+        rlt.symbol=symbol*rlt.symbol;
         return rlt;
+    }
+    if(input<='z'&&input>='a'){
+        return FunctionProcessor();
+    }
+    if(input=='-'){
+        rlt.symbol=-1;
+        input=getchar();
     }
     if(input>'9'||input<'0'){
         perror("syntax error!\n");
@@ -124,6 +173,7 @@ Data Cal()
 			case '-': Push(st,InitStackMember(Read(-1))); break;
 			case '*': Top(st)->data=Mul(Top(st)->data,Read(1)); break;
 			case '/': Top(st)->data=Div(Top(st)->data,Read(1)); break;
+            case '%': Top(st)->data=Mod(Top(st)->data,Read(1)); break;
             case '!': Top(st)->data=Fac(Top(st)->data); input=getchar(); break;
 			default: perror("illegal word!\n"); exit(-1);
 		}
