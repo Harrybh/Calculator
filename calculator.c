@@ -56,13 +56,37 @@ Data Mul(Data a,Data b)
 
 Data Div(Data a,Data b)
 {
-    Data rlt;
     if(b.number==0){
         perror("algorithmic error!\n");
         exit(1);
     }
+    Data rlt;
     rlt.symbol=a.symbol/b.symbol;
     rlt.number=a.number/b.number;
+    return rlt;
+}
+
+Data Pow(Data a,Data b)
+{
+    Data rlt;
+    rlt.symbol=a.symbol;
+    rlt.number=a.number;
+    for(int i=2;i<=b.number;i++)
+        rlt.number*=a.number;
+    return rlt;
+}
+
+Data Fac(Data x)
+{
+    if(x.number<=0){
+        perror("algorithmic error!\n");
+        exit(1);
+    }
+    Data rlt;
+    rlt.symbol=x.symbol;
+    rlt.number=1;
+    for(int i=2;i<=x.number;i++)
+        rlt.number*=i;
     return rlt;
 }
 
@@ -86,6 +110,8 @@ Data Read(int symbol)
 		rlt.number+=input-'0';
         input=getchar();
 	}
+    if(input=='^')
+        rlt=Pow(rlt,Read(1));
 	return rlt;
 }
 
@@ -99,7 +125,7 @@ Data Cal()
 			case '-': Push(st,InitStackMember(Read(-1))); break;
 			case '*': Top(st)->data=Mul(Top(st)->data,Read(1)); break;
 			case '/': Top(st)->data=Div(Top(st)->data,Read(1)); break;
-			case '(': Push(st,InitStackMember(Cal())); break;
+            case '!': Top(st)->data=Fac(Top(st)->data); input=getchar(); break;
 			default: perror("illegal word!\n"); exit(1);
 		}
 	}
