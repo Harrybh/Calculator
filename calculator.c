@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<string.h>
-#include<malloc.h>
 #include<stdlib.h>
 #include<stdbool.h>
 #include"stack.h"
@@ -58,7 +57,7 @@ Data Div(Data a,Data b)
 {
     if(b.number==0){
         perror("algorithmic error!\n");
-        exit(1);
+        exit(-1);
     }
     Data rlt;
     rlt.symbol=a.symbol/b.symbol;
@@ -80,7 +79,7 @@ Data Fac(Data x)
 {
     if(x.number<=0){
         perror("algorithmic error!\n");
-        exit(1);
+        exit(-1);
     }
     Data rlt;
     rlt.symbol=x.symbol;
@@ -103,7 +102,7 @@ Data Read(int symbol)
     }
     if(input>'9'||input<'0'){
         perror("syntax error!\n");
-        exit(1);
+        exit(-1);
     }
 	while(input<='9'&&input>='0'){
 		rlt.number*=10;
@@ -126,7 +125,7 @@ Data Cal()
 			case '*': Top(st)->data=Mul(Top(st)->data,Read(1)); break;
 			case '/': Top(st)->data=Div(Top(st)->data,Read(1)); break;
             case '!': Top(st)->data=Fac(Top(st)->data); input=getchar(); break;
-			default: perror("illegal word!\n"); exit(1);
+			default: perror("illegal word!\n"); exit(-1);
 		}
 	}
     if(input==')') input=getchar();

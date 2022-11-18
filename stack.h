@@ -1,6 +1,8 @@
-#include<malloc.h>
-#include<stdbool.h>
+#include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
+#include<stdbool.h>
+#include<windows.h>
 
 typedef struct Data
 {
@@ -15,12 +17,11 @@ typedef struct StackMember
     Data data;
     
 }StackMember;
-//定义空成员
 
 //定义栈
 typedef struct Stack
 {
-    StackMember *top;
+    struct StackMember *top;
     int size;
 }Stack;
 
@@ -72,6 +73,9 @@ bool Pop(Stack *s)
         return false;
     if (Empty(s))//判断栈内是否为空
         return false;
+    StackMember *topMember=s->top;
     s->top=s->top->next;
+    free(topMember);
+    (s->size)--;
     return true;
 }
