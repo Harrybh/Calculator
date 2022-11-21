@@ -5,18 +5,11 @@ typedef struct
     int *Array;
     int Len;
     int *ArrayNew;
-    vector()
+    void init()
     {
         Array = NULL;
         ArrayNew = NULL;
         Len = 0;
-    }
-    vector(int Num)
-    {
-        int tmp = Num;
-        while(tmp)tmp /= 10, Len++;
-        Array = (int *)malloc(Len * sizeof(int));
-        for(int i = 0;i < Len; i++)Array[i] = Num % 10, Num /= 10;
     }
     void clear()
     {
