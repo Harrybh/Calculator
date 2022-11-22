@@ -6,8 +6,8 @@
 
 typedef struct Data
 {
-    int number;
-    int symbol;   
+    int number;//值
+    int symbol;//符号
 }Data;
 
 //定义栈里的元素
@@ -25,6 +25,7 @@ typedef struct Stack
     int size;
 }Stack;
 
+//初始化栈
 Stack *Init()
 {
     Stack *s = (Stack *)malloc(sizeof(Stack));//申请栈的内存空间,并将空间的地址传给栈数据类型的指针.
@@ -33,6 +34,7 @@ Stack *Init()
     return s;//返回初始话栈的地址
 }
 
+//初始化栈的成员
 StackMember *InitStackMember(Data x)
 {
     StackMember *tempStackMember=(StackMember *)malloc(sizeof(StackMember));
@@ -58,7 +60,7 @@ StackMember *Top(Stack *s)
 //入栈操作
 bool Push(Stack *s,StackMember *val)
 {
-    if (s == NULL)//判断栈是否存在
+    if (s==NULL)//判断栈是否存在
         return false;
     val->next=s->top;
     s->top=val;
@@ -75,7 +77,7 @@ bool Pop(Stack *s)
         return false;
     StackMember *topMember=s->top;
     s->top=s->top->next;
-    free(topMember);
+    free(topMember); //释放出栈成员的空间
     (s->size)--;
     return true;
 }
