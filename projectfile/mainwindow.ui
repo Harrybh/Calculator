@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>787</width>
+    <height>1026</height>
+   </rect>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">         </string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <action name="save">
+   <property name="text">
+    <string>&amp;保存</string>
+   </property>
+  </action>
+  <action name="open">
+   <property name="text">
+    <string>&amp;打开</string>
+   </property>
+  </action>
+  <action name="about">
+   <property name="text">
+    <string>关于...</string>
+   </property>
+  </action>
+  <action name="help">
+   <property name="text">
+    <string>&amp;使用指南</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="text">
+    <string>save</string>
+   </property>
+  </action>
+  <action name="calsave">
+   <property name="text">
+    <string>&amp;计算并保存</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
