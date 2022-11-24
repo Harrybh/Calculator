@@ -3,10 +3,12 @@
 #include<stdlib.h>
 #include<stdbool.h>
 #include<windows.h>
+#include"vector.h"
 
 typedef struct Data
 {
-    int number;//值
+    vector number;//值
+    int point;
     int symbol;//符号
 }Data;
 

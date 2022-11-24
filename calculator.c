@@ -26,6 +26,7 @@ Data Cos(Data x);
 Data Tan(Data x);
 //开方
 Data Sqrt(Data x);
+Data Abs(Data x);
 //处理不同类型的对数函数
 Data LogProcessor();
 //识别当前input的字符，找到对应函数并返回函数值
@@ -53,9 +54,9 @@ Data Cal();
 //用于获取输入的字符
 char input;
 //常量(自然常量)
-const Data E={1,123};
+const Data E={getE(),50,1};
 //常量(圆周率)
-const Data Pi={1,123};
+const Data Pi={getPi(),50,1};
 
 int main()
 {
@@ -177,7 +178,10 @@ Data LogProcessor()
 Data FunctionProcessor()
 {
     Data rlt;
+    rlt.number.init();
     switch(input){
+        case 'a':
+            rlt=Abs(Read(1));
         case 's':
             if(getchar()=='i')
                 rlt=Sin(Read(1));
@@ -212,26 +216,34 @@ Data Read(int symbol)
         rlt.symbol=symbol*rlt.symbol;
     }
     else if(input<='z'&&input>='a'){
-        //当读到字母时，对函数进行运算返回函数值
-        rlt=FunctionProcessor();
-        rlt.symbol=symbol*rlt.symbol;
+        if(input=='e')
+            rlt.number=E;
+        else if(input=='p'){
+            rlt.number=Pi;
+            input=getchar();
+        }
+        else{
+            //当读到字母时，对函数进行运算返回函数值
+            rlt=FunctionProcessor();
+            rlt.symbol=symbol*rlt.symbol;
+        }
     }
     else{
         //读取数字
-        rlt.number=0;
+        rlt.number.init();
         if(input=='-'){
             rlt.symbol=-1;
             input=getchar();
         }
         else
             rlt.symbol=1;
+        if()
         if(input>'9'||input<'0'){
             perror("syntax error!\n");
             exit(-1);
         }
         while(input<='9'&&input>='0'){
-            rlt.number*=10;
-            rlt.number+=input-'0';
+            rlt.number.push_back(input-'0');
             input=getchar();
         }
     }
