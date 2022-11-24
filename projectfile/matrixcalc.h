@@ -122,7 +122,7 @@ double Det(myMatrix x)
             if(j==t)continue;
             tmp.mtx[i-1][j>t?j-1:j]=x.mtx[i][j];
         }
-        ans+=Det(tmp)*(t&1?1:-1);
+        ans+=x.mtx[1][t]*Det(tmp)*(t&1?1:-1);
     }
     return ans;
 }
