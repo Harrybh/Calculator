@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         number.h
         number.cpp
         number.ui
+        matrixcalc.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

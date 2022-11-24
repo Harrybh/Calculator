@@ -7,7 +7,7 @@ template <typename T>inline void swap(T *x,T *y)
     *y = *x;
     *x = t;
 }
-typedef struct 
+struct myMatrix
 {
     double mtx[MATRIX_SIZE][MATRIX_SIZE];
     int n;
@@ -76,24 +76,53 @@ typedef struct
         }
         return cur;
 	}
-}Matrix;
-double Det(Matrix x)
+    myMatrix operator * (const myMatrix &b)const
+    {
+        myMatrix c;
+        c.n=n;
+        for(int i=1;i<=n;i++)
+        for(int j=1;j<=n;j++)c.mtx[i][j]=0;
+        for(int i=1;i<=n;i++)
+        for(int j=1;j<=n;j++)
+        for(int k=1;k<=n;k++)c.mtx[i][j]+=mtx[i][k]*b.mtx[k][j];
+        return c;
+    }
+    myMatrix operator ^ (const int &k)const
+    {
+        myMatrix c,a;
+        c.n=a.n=n;
+        for(int i=1;i<=n;i++)
+        for(int j=1;j<=n;j++)c.mtx[i][j]=0;
+        for(int i=1;i<=n;i++)c.mtx[i][i]=1;
+        for(int i=1;i<=n;i++)
+        for(int j=1;j<=n;j++)a.mtx[i][j]=mtx[i][j];
+        int t=k;
+        while(t)
+        {
+            if(t&1)c=c*a;
+            a=a*a;
+            t>>=1;
+        }
+        return c;
+    }
+};
+double Det(myMatrix x)
 {
-	if(x.n==2)return x.mtx[1][1]*x.mtx[2][2]-x.mtx[1][2]*x.mtx[2][1];
-	if(x.n==1)return x.mtx[1][1];
-	int n=x.n;
-	Matrix tmp;
-	double ans=0;
-	tmp.n=n-1;
-	for(int t=1;t<=n;t++)
-	{
-		for(int i=2;i<=n;i++)
-		for(int j=1;j<=n;j++)
-		{
-			if(j==t)continue;
-			tmp.mtx[i-1][j>t?j-1:j]=x.mtx[i][j];
-		}
-		ans+=Det(tmp)*(t&1?1:-1);
-	}
-	return ans;
+    if(x.n==2)return x.mtx[1][1]*x.mtx[2][2]-x.mtx[1][2]*x.mtx[2][1];
+    if(x.n==1)return x.mtx[1][1];
+    int n=x.n;
+    myMatrix tmp;
+    double ans=0;
+    tmp.n=n-1;
+    for(int t=1;t<=n;t++)
+    {
+        for(int i=2;i<=n;i++)
+        for(int j=1;j<=n;j++)
+        {
+            if(j==t)continue;
+            tmp.mtx[i-1][j>t?j-1:j]=x.mtx[i][j];
+        }
+        ans+=Det(tmp)*(t&1?1:-1);
+    }
+    return ans;
 }

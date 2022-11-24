@@ -1,6 +1,6 @@
 #include "matrix.h"
 #include "ui_matrix.h"
-
+#include "matrixcalc.h"
 void Matrix::mousePressEvent(QMouseEvent *e)
 {
     if(e->button()==Qt::LeftButton)
@@ -83,9 +83,226 @@ void Matrix::on_closeButton_clicked()
     QApplication::exit();
 }
 
-
 void Matrix::on_gaussButton_clicked()
 {
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的齐次方程（第一行应输入方程未知量个数）");
+        return ;
+    }
+    in>>s.n;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n+1;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的齐次方程");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    s.Gauss();
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n+1;j++)
+        {
+            output+=QString::number(s.mtx[i][j],'f',2);
+            output+=' ';
+        }
+        output+='\n';
+    }
+    ui->textEdit->setPlainText(output);
+}
 
+
+void Matrix::on_clmButton_clicked()
+{
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的齐次方程（第一行应输入方程未知量个数）");
+        return ;
+    }
+    in>>s.n;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n+1;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的齐次方程");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    s.Gauss();
+    for(int i = 1;i <= s.n;i++)
+    {
+        output+=QString::number(s.mtx[i][s.n+1],'f',2);
+        output+=' ';
+        output+='\n';
+    }
+    ui->textEdit->setPlainText(output);
+}
+
+
+void Matrix::on_invButton_clicked()
+{
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的矩阵（第一行应输入矩阵阶数）");
+        return ;
+    }
+    in>>s.n;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的矩阵");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    if(!Det(s))
+    {
+        ui->textEdit->setPlainText("该矩阵不可逆");
+        return ;
+    }
+    s.Inv();
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            output+=QString::number(s.mtx[i][j],'f',2);
+            output+=' ';
+        }
+        output+='\n';
+    }
+    ui->textEdit->setPlainText(output);
+}
+
+
+void Matrix::on_zhiButton_clicked()
+{
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的矩阵（第一行应输入矩阵阶数）");
+        return ;
+    }
+    in>>s.n;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的矩阵");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    ui->textEdit->setPlainText(QString::number(s.Rank()));
+}
+
+
+void Matrix::on_detButton_clicked()
+{
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的矩阵（第一行应输入矩阵阶数）");
+        return ;
+    }
+    in>>s.n;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的矩阵");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    ui->textEdit->setPlainText(QString::number(Det(s),'f',2));
+}
+
+
+void Matrix::on_powButton_clicked()
+{
+    QString input= ui->textEdit->toPlainText();
+    QString output="";
+    myMatrix s;
+    QTextStream in(&input);
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的数据（第一行应输入矩阵阶数和次幂）");
+        return ;
+    }
+    in>>s.n;
+    int k;
+    if(in.atEnd())
+    {
+        ui->textEdit->setPlainText("请输入正确的数据（第一行应输入矩阵阶数和次幂）");
+        return ;
+    }
+    in>>k;
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            if(in.atEnd())
+            {
+                ui->textEdit->setPlainText("请输入正确的矩阵");
+                return ;
+            }
+            in>>s.mtx[i][j];
+            qDebug()<<s.mtx[i][j];
+        }
+    }
+    s=s^k;
+    qDebug()<<"Yes";
+    for(int i = 1;i <= s.n;i++)
+    {
+        for(int j=1;j<= s.n;j++)
+        {
+            output+=QString::number(s.mtx[i][j],'f',2);
+            output+=' ';
+        }
+        output+='\n';
+    }
+    ui->textEdit->setPlainText(output);
 }
 

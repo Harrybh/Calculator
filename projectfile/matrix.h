@@ -31,6 +31,16 @@ private slots:
 
     void on_gaussButton_clicked();
 
+    void on_clmButton_clicked();
+
+    void on_invButton_clicked();
+
+    void on_zhiButton_clicked();
+
+    void on_detButton_clicked();
+
+    void on_powButton_clicked();
+
 signals:
     void sendsignal();
 
