@@ -1,0 +1,78 @@
+//#include<stdio.h>
+//
+//#include<string.h>
+//int len1, len2;
+//char dividend[1005], divisor[1005];
+//int a[1001];
+//void sub() 
+//{
+//	int i = 0, j;
+//	while (1)
+//	{
+//		if (dividend[i] == '0')  
+//			i++;
+//		else 
+//		{
+//			j = i;
+//			break;
+//		}
+//	}
+//	for (; i < len2; i++)
+//		dividend[i] = dividend[i] - divisor[i] + '0';
+//	for (i = len2 - 1; i > j; i--) 
+//	{
+//		if (dividend[i] < '0')
+//		{
+//			dividend[i] += 10;
+//			dividend[i - 1]--;
+//		}
+//	}
+//}
+//int main() 
+//{
+//	scanf("%s%s", dividend, divisor);
+//	
+//		int p, i;
+//		len1 = strlen(dividend);
+//		len2 = strlen(divisor);
+//		if ((len2 == 1 && divisor[0] == '0') && (len1 == 1 && dividend[0] == '0'))
+//			printf("error\n");
+//		else 
+//			if (len2 == 1 && divisor[0] == '0')
+//			printf("error\n");
+//		else 
+//				if (len1 < len2 || (len1 == len2 && strncmp(dividend, divisor, len2) < 0))
+//			printf("0\n");
+//		else 
+//		{
+//			p = 0;
+//			while (1) 
+//			{
+//				a[p] = 0;
+//				while (strncmp(dividend, divisor, len2) >= 0)
+//				{  
+//					sub();
+//					a[p]++;
+//				}
+//				p++;
+//				if (len1 == len2) break;
+//				for (i = len2 - 1; i >= 0; i--)  
+//					divisor[i + 1] = divisor[i];
+//				divisor[0] = '0';
+//				len2++;
+//				divisor[len2] = '\0';
+//			}
+//			i = 0;
+//			while (1) 
+//			{
+//				if (a[i] == 0)  i++;
+//				else
+//					break;
+//			}
+//			for (; i < p; i++)
+//				printf("%d", a[i]);
+//			printf("\n");
+//		}
+//	
+//	return 0;
+//}
