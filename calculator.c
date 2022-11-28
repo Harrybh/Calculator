@@ -49,6 +49,7 @@ Data Read(int symbol);
 当读取到-时，向栈中加入-后面的数字的相反数。
 所有字符读取完后，将栈中元素一一相加，得到最终结果。
 */
+void Write(Data x)
 Data Cal();
 
 //用于获取输入的字符
@@ -292,4 +293,14 @@ Data Cal()
 	}
     free(st);  //计算完后
     return rlt;
+}
+
+void Write(Data x)
+{
+    if(x.symbol<0) putchar('-');
+    for(int i=x.number.size()-1;i>=0;i--){
+        printf("%d",x.number[i]);
+        if(i==x.point) putchar('.');
+    }
+    putchar('\n');
 }
