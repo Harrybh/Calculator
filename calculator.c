@@ -49,6 +49,7 @@ Data Read(int symbol);
 当读取到-时，向栈中加入-后面的数字的相反数。
 所有字符读取完后，将栈中元素一一相加，得到最终结果。
 */
+void Write(Data x)
 Data Cal();
 
 //用于获取输入的字符
@@ -78,7 +79,7 @@ Data Add(Data a,Data b)
     }
     Data rlt;
     rlt.symbol=a.symbol;
-    rlt.number=a.number+b.number;
+    //rlt.number=a.number+b.number;
     return rlt;
 }
 
@@ -86,7 +87,7 @@ Data Sub(Data a,Data b)
 {
     Data rlt;
     rlt.symbol=a.number>b.number?1:-1;
-    rlt.number=rlt.symbol*(a.number-b.number);
+    //rlt.number=rlt.symbol*(a.number-b.number);
     return rlt;
 }
 
@@ -94,7 +95,7 @@ Data Mul(Data a,Data b)
 {
     Data rlt;
     rlt.symbol=a.symbol*b.symbol;
-    rlt.number=a.number*b.number;
+    //rlt.number=a.number*b.number;
     return rlt;
 }
 
@@ -106,7 +107,7 @@ Data Div(Data a,Data b)
     }
     Data rlt;
     rlt.symbol=a.symbol/b.symbol;
-    rlt.number=a.number/b.number;
+    //rlt.number=a.number/b.number;
     return rlt;
 }
 
@@ -237,15 +238,18 @@ Data Read(int symbol)
         }
         else
             rlt.symbol=1;
-        if()
         if(input>'9'||input<'0'){
             perror("syntax error!\n");
             exit(-1);
         }
+        vector tmp;
+        tmp.init();
         while(input<='9'&&input>='0'){
-            rlt.number.push_back(input-'0');
+            tmp.push_back(input-'0');
             input=getchar();
         }
+        for(int i=tmp.size()-1;i>=0;i--)
+            rlt.number.push_back(tmp[i]);
     }
     //处理幂
     if(input=='^')
@@ -289,4 +293,14 @@ Data Cal()
 	}
     free(st);  //计算完后
     return rlt;
+}
+
+void Write(Data x)
+{
+    if(x.symbol<0) putchar('-');
+    for(int i=x.number.size()-1;i>=0;i--){
+        printf("%d",x.number[i]);
+        if(i==x.point) putchar('.');
+    }
+    putchar('\n');
 }

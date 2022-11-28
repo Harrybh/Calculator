@@ -43,7 +43,7 @@ typedef struct
         Array = ArrayNew;
         Len--;
     }
-    int size()
+    int size() const
     {
         return Len;
     }
