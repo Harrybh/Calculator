@@ -54,10 +54,6 @@ Data Cal();
 
 //用于获取输入的字符
 char input;
-//常量(自然常量)
-const Data E={getE(),50,1};
-//常量(圆周率)
-const Data Pi={getPi(),50,1};
 
 int main()
 {
@@ -211,33 +207,33 @@ Data Read(int symbol)
 {
 	Data rlt;
     input=getchar();
+    if(input=='-'){
+        if(symbol=-1){
+            perror("syntax error!\n");
+            exit(-1);
+        }
+        symbol=-1;
+        input=getchar();
+    }
     if(input=='('){
         //当读取到左括号时，对括号内内容进行运算并返回计算结果
         rlt=Cal();
-        rlt.symbol=symbol*rlt.symbol;
     }
     else if(input<='z'&&input>='a'){
-        if(input=='e')
-            rlt.number=E;
+        if(input=='e') rlt=E;
         else if(input=='p'){
-            rlt.number=Pi;
+            rlt=Pi;
             input=getchar();
         }
         else{
             //当读到字母时，对函数进行运算返回函数值
             rlt=FunctionProcessor();
-            rlt.symbol=symbol*rlt.symbol;
         }
     }
     else{
         //读取数字
         rlt.number.init();
-        if(input=='-'){
-            rlt.symbol=-1;
-            input=getchar();
-        }
-        else
-            rlt.symbol=1;
+        rlt.symbol=1;
         if(input>'9'||input<'0'){
             perror("syntax error!\n");
             exit(-1);
@@ -250,11 +246,35 @@ Data Read(int symbol)
         }
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
+        if(input=='e'){
+            rlt=rlt*E;
+        }
+        else if(input=='p'){
+            rlt=rlt*Pi;
+            input=getchar();
+        }
+        else{
+            //当读到字母时，对函数进行运算返回函数值
+            rlt=rlt*FunctionProcessor();
+        }
     }
+    rlt.symbol*=symbol;
     //处理幂
     if(input=='^')
         rlt=Pow(rlt,Read(1));
 	return rlt;
+}
+
+void Write(Data x)
+{
+    int end=0;
+    while(!x.number[end]) end++;
+    if(x.symbol<0) putchar('-');
+    for(int i=x.number.size()-1;i>=end;i--){
+        printf("%d",x.number[i]);
+        if(i==x.point) putchar('.');
+    }
+    putchar('\n');
 }
 
 Data Cal()
@@ -293,14 +313,4 @@ Data Cal()
 	}
     free(st);  //计算完后
     return rlt;
-}
-
-void Write(Data x)
-{
-    if(x.symbol<0) putchar('-');
-    for(int i=x.number.size()-1;i>=0;i--){
-        printf("%d",x.number[i]);
-        if(i==x.point) putchar('.');
-    }
-    putchar('\n');
 }
