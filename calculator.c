@@ -234,18 +234,25 @@ Data Read(int symbol)
         //读取数字
         rlt.number.init();
         rlt.symbol=1;
+        rlt.point=0;
         if(input>'9'||input<'0'){
             perror("syntax error!\n");
             exit(-1);
         }
         vector tmp;
+        int pointPos=0;
         tmp.init();
-        while(input<='9'&&input>='0'){
-            tmp.push_back(input-'0');
+        while((input<='9'&&input>='0')||(input=='.')){
+            if(input=='.')
+                rlt.point=pointPos;
+            else   
+                tmp.push_back(input-'0');
+            pointPos++;
             input=getchar();
         }
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
+        if(rlt.point) rlt.point=rlt.number.size()-rlt.point;
         if(input=='e'){
             rlt=rlt*E;
         }
