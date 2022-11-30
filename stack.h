@@ -1,16 +1,5 @@
-#include<stdio.h>
-#include<string.h>
 #include<stdlib.h>
-#include<stdbool.h>
-#include<windows.h>
-#include"vector.h"
-
-typedef struct Data
-{
-    vector number;//值
-    int point;
-    int symbol;//符号
-}Data;
+#include"data.h"
 
 //定义栈里的元素
 typedef struct StackMember
