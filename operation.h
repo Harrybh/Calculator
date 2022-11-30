@@ -1,6 +1,6 @@
 #include "data.h"
 #include <stdbool.h>
-
+#include "NTT.h"
 bool operator>(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
@@ -147,13 +147,7 @@ Data operator*(const Data &x, const Data &y)
     {
         rlt.number.push_back(0);
     }
-    for (i = 0; i < x.number.size(); i++)
-    {
-        for (j = 0; j < y.number.size(); j++)
-        {
-            rlt.number[i + j] += x.number[i] * y.number[j];
-        }
-    }
+    Process_NTT(x, y, &rlt);
     for (i = 0; i < rlt.number.size(); i++)
     {
         if (rlt.number[i] >= 10)
