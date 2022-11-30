@@ -1,4 +1,4 @@
-#include<data.h>
+#include<operation.h>
 #define PROCESS_TIMES 51
 Data cos(Data x)
 {
