@@ -1,6 +1,80 @@
 #include <stdbool.h>
-#include "NTT.h"
 #include "data.h"
+const int maxn = 1e6 + 10;
+const int mod = 998244353, gs = 3;
+int rev[maxn], lim, len;
+int A_tmp[maxn], B_tmp[maxn];
+void init(int Len)
+{
+    lim = 1, len = 0;
+    while (lim <= Len)
+        lim <<= 1, len++;
+    for (int i = 1; i < lim; i++)
+        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << len - 1);
+    for (int i = 0; i < lim; i++)
+        A_tmp[i] = B_tmp[i] = 0;
+}
+inline void swap(int *a, int *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+int Pow(int a, long long k)
+{
+    int ret = 1;
+    while (k)
+    {
+        if (k & 1)
+            ret = ret * 1LL * a % mod;
+        k >>= 1, a = a * 1LL * a % mod;
+    }
+    return ret;
+}
+void NTT(int *a, int type)
+{
+    for (int i = 0; i < lim; i++)
+        if (rev[i] > i)
+            swap(&a[rev[i]], &a[i]);
+    for (int mid = 1; mid < lim; mid <<= 1)
+    {
+        int wn = Pow(gs, (mod - 1) / (mid << 1));
+        if (type == -1)
+            wn = Pow(wn, mod - 2);
+        for (int i = 0; i < lim; i += mid << 1)
+            for (int j = 0, w = 1; j < mid; j++, w = w * 1LL * wn % mod)
+            {
+                int x = a[i + j], y = a[i + j + mid] * 1LL * w % mod;
+                a[i + j] = (x + y) % mod;
+                a[i + j + mid] = (x + mod - y) % mod;
+            }
+    }
+    if (type == -1)
+    {
+        int inv = Pow(lim, mod - 2);
+        for (int i = 0; i < lim; i++)
+            a[i] = a[i] * 1LL * inv % mod;
+    }
+}
+inline int min(const int &a, const int &b) { return a > b ? b : a; }
+inline int max(const int &a, const int &b) { return b > a ? b : a; }
+inline void Process_NTT(const Data &a, const Data &b, Data *c)
+{
+    int lim1 = a.number.size(), lim2 = b.number.size();
+    init(lim1 + lim2);
+    for (int i = 0; i < min(lim1, lim); i++)
+        A_tmp[i] = a.number[i];
+    for (int i = 0; i < min(lim2, lim); i++)
+        B_tmp[i] = b.number[i];
+    NTT(A_tmp, 1), NTT(B_tmp, 1);
+    for (int i = 0; i < lim; i++)
+        A_tmp[i] = A_tmp[i] * 1LL * B_tmp[i] % mod;
+    NTT(A_tmp, -1);
+    while (c->number.size() < lim1 + lim2)
+        c->number.push_back(0);
+    for (int i = 0; i < lim1 + lim2 - 1; i++)
+        c->number[i] = A_tmp[i];
+}
 bool operator>=(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
@@ -8,7 +82,7 @@ bool operator>=(const Data &x, const Data &y)
     for (int i = x.number.size() - 1, j = y.number.size() - 1; i >= 0 && j >= 0; i--, j--)
         if (x.number[i] != y.number[j])
             return x.number[i] > y.number[j];
-    return x.point>y.point;
+    return x.point > y.point;
 }
 
 Data operator-(const Data &x, const Data &y)
@@ -35,10 +109,12 @@ Data operator-(const Data &x, const Data &y)
             leftNow = 0;
         else
             leftNow = left[i];
-        rlt.number.push_back(leftNow+rlt.number[k] >= rightNow ? 0 : -1);
-        rlt.number[k] += leftNow+rlt.number[k] >= rightNow ? leftNow - rightNow : leftNow + 10 - rightNow;
-        if (j >= rightPoint - leftPoint && i < left.size()) i++;
-        if (i > leftPoint - rightPoint && j < right.size()) j++;
+        rlt.number.push_back(leftNow + rlt.number[k] >= rightNow ? 0 : -1);
+        rlt.number[k] += leftNow + rlt.number[k] >= rightNow ? leftNow - rightNow : leftNow + 10 - rightNow;
+        if (j >= rightPoint - leftPoint && i < left.size())
+            i++;
+        if (i > leftPoint - rightPoint && j < right.size())
+            j++;
     }
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
@@ -70,38 +146,25 @@ Data operator+(const Data &x, const Data &y)
     leftPoint = x.point;
     rightPoint = y.point;
     int move, i; // move小数点对齐移动位数
-    //对齐
     if (leftPoint >= rightPoint)
     {
         move = leftPoint - rightPoint;
         for (i = 0; i < x.number.size(); i++)
-        {
             left.push_back(x.number[i]);
-        }
         for (i = 0; i < move; i++)
-        {
             right.push_back(0);
-        }
         for (i = 0; i < y.number.size(); i++)
-        {
             right.push_back(y.number[i]);
-        }
     }
     else
     {
         move = rightPoint - leftPoint;
         for (i = 0; i < y.number.size(); i++)
-        {
             right.push_back(y.number[i]);
-        }
         for (i = 0; i < move; i++)
-        {
             left.push_back(0);
-        }
         for (i = 0; i < x.number.size(); i++)
-        {
             left.push_back(x.number[i]);
-        }
     }
     //计算
     int numNow, extra = 0; // extra进位
@@ -147,9 +210,10 @@ Data operator*(const Data &x, const Data &y)
             rlt.number[i] %= 10;
         }
     }
-    if(rlt.number[rlt.number.size()-1]>=10){
-        rlt.number.push_back(rlt.number[rlt.number.size()-1]/10);
-        rlt.number[rlt.number.size()-2]%=10;
+    if (rlt.number[rlt.number.size() - 1] >= 10)
+    {
+        rlt.number.push_back(rlt.number[rlt.number.size() - 1] / 10);
+        rlt.number[rlt.number.size() - 2] %= 10;
     }
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
