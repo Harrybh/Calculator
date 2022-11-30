@@ -1,4 +1,4 @@
-#include <data.h>
+#include "data.h"
 const int maxn = 1e6 + 10;
 const int mod = 998244353, gs = 3;
 int rev[maxn], lim, len;
