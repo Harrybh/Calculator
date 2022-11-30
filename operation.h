@@ -1,8 +1,13 @@
 #include "data.h"
 #include <stdbool.h>
+<<<<<<< HEAD
 #include <stdio.h>
 
 bool operator>=(const Data &x, const Data &y)
+=======
+#include "NTT.h"
+bool operator>(const Data &x, const Data &y)
+>>>>>>> 6e3db1ca6193683476aea6ca8a221a61107facca
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
         return x.number.size() - x.point > y.number.size() - y.point;
@@ -135,6 +140,7 @@ Data operator*(const Data &x, const Data &y)
     rlt.point = x.point + y.point; //小数点
     rlt.symbol = x.symbol * y.symbol;
     int i, j;
+<<<<<<< HEAD
     for (i = 0; i < x.number.size(); i++)
     {
         for (j = 0; j < y.number.size(); j++)
@@ -146,6 +152,14 @@ Data operator*(const Data &x, const Data &y)
         }
     }
     for (i = 0; i < rlt.number.size()-1; i++)
+=======
+    for (i = 0; i < x.number.size() + y.number.size(); i++)
+    {
+        rlt.number.push_back(0);
+    }
+    Process_NTT(x, y, &rlt);
+    for (i = 0; i < rlt.number.size(); i++)
+>>>>>>> 6e3db1ca6193683476aea6ca8a221a61107facca
     {
         if (rlt.number[i] >= 10)
         {
