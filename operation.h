@@ -1,6 +1,6 @@
-#include "data.h"
 #include <stdbool.h>
 #include "NTT.h"
+#include "data.h"
 bool operator>=(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
