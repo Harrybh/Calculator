@@ -1,16 +1,25 @@
 #include<stdlib.h>
 #include<string.h>
-
-typedef struct 
+#include<stdio.h>
+struct vector 
 {
     int *Array;
     int Len;
+    int BatchSize;
     int *ArrayNew;
     void init()
     {
         Array = NULL;
         ArrayNew = NULL;
         Len = 0;
+        BatchSize = 0;
+    }
+    vector()
+    {
+        Array = NULL;
+        ArrayNew = NULL;
+        Len = 0;
+        BatchSize = 0;
     }
     void clear()
     {
@@ -20,14 +29,28 @@ typedef struct
     }
     void push_back(int Num)
     {
-        ArrayNew = (int *)malloc(sizeof(int)*(Len+1));
-        if(Len)
+        if(Len+1<=BatchSize)
         {
-            memcpy(ArrayNew,Array,sizeof(int)*Len);
-            free(Array);
+            Array[Len++] = Num;
         }
-        Array = ArrayNew;
-        Array[Len++] = Num;
+        else 
+        {
+            if(Len)
+            { 
+                BatchSize<<=1;
+                ArrayNew = (int *)malloc(sizeof(int)*BatchSize);
+                memcpy(ArrayNew,Array,sizeof(int)*Len);
+                free(Array);
+            }
+            else 
+            {
+                ArrayNew = (int *)malloc(sizeof(int));
+                BatchSize=1;
+            }
+            Array = ArrayNew;
+            Array[Len++] = Num;    
+        }
+        
     }
     void pop_back()
     {
@@ -36,13 +59,20 @@ typedef struct
         {
             Len--;
             free(Array);
+            BatchSize = 0;
             return;
         }
-        ArrayNew = (int *)malloc(sizeof(int)*(Len-1));
-        memcpy(ArrayNew,Array,sizeof(int)*(Len-1));
-        free(Array);
-        Array = ArrayNew;
-        Len--;
+        if(Len-1 <= (BatchSize>>1))
+        {
+            BatchSize>>=1;
+            ArrayNew = (int *)malloc(sizeof(int)*BatchSize);
+            memcpy(ArrayNew,Array,sizeof(int)*BatchSize);
+            free(Array);
+            Array = ArrayNew;
+            Len--;    
+        }
+        else Len--;
+        
     }
     int size() const
     {
@@ -52,13 +82,33 @@ typedef struct
     {
         return Array[i];
     }
-}vector;
+    int batch_size() const 
+    {
+        return BatchSize;
+    }
+    vector &operator = (const vector &vec)
+    {
+        if(Array!=NULL)free(Array);
+        Array = (int *)malloc(sizeof(int)*vec.batch_size());
+        memcpy(Array,vec.Array,sizeof(int)*vec.batch_size());
+        Len = vec.size();
+        BatchSize = vec.batch_size();
+        return (*this);
+    }
+};
 
 typedef struct Data
 {
     vector number;//值
     int point;
     int symbol;//符号
+    Data &operator = (const Data &b)
+    {
+        number = b.number;
+        point = b.point;
+        symbol = b.symbol;
+        return (*this);
+    }
 }Data;
 
 //定义栈里的元素
