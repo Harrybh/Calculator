@@ -2,18 +2,8 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#include"stack.h"
+#include"data.h"
 
-//加法
-Data Add(Data a,Data b);
-//减法
-Data Sub(Data a,Data b);
-//乘法
-Data Mul(Data a,Data b);
-//除法
-Data Div(Data a,Data b);
-//模
-Data Mod(Data a,Data b);
 //幂
 Data Pow(Data a,Data b);
 //对数函数
@@ -63,58 +53,6 @@ int main()
     return 0;
 }
 
-Data Add(Data a,Data b)
-{
-    if(a.symbol<0&&b.symbol>0){
-        a.symbol=1;
-        return Sub(b,a);
-    }
-    if(b.symbol<0&&a.symbol>0){
-        b.symbol=1;
-        return Sub(a,b);
-    }
-    Data rlt;
-    rlt.symbol=a.symbol;
-    //rlt.number=a.number+b.number;
-    return rlt;
-}
-
-Data Sub(Data a,Data b)
-{
-    Data rlt;
-    rlt.symbol=a.number>b.number?1:-1;
-    //rlt.number=rlt.symbol*(a.number-b.number);
-    return rlt;
-}
-
-Data Mul(Data a,Data b)
-{
-    Data rlt;
-    rlt.symbol=a.symbol*b.symbol;
-    //rlt.number=a.number*b.number;
-    return rlt;
-}
-
-Data Div(Data a,Data b)
-{
-    if(b.number==0){
-        perror("algorithmic error!\n");
-        exit(-1);
-    }
-    Data rlt;
-    rlt.symbol=a.symbol/b.symbol;
-    //rlt.number=a.number/b.number;
-    return rlt;
-}
-
-Data Mod(Data a,Data b)
-{
-    Data rlt;
-    rlt.number=0;
-    rlt.symbol=0;
-    return rlt;
-}
-
 Data Pow(Data a,Data b)
 {
     Data rlt;
@@ -127,15 +65,17 @@ Data Pow(Data a,Data b)
 
 Data Fac(Data x)
 {
-    if(x.number<=0){
+    if(x.number<=0||x.point!=0){
         perror("algorithmic error!\n");
         exit(-1);
     }
-    Data rlt;
-    rlt.symbol=x.symbol;
-    rlt.number=1;
-    for(int i=2;i<=x.number;i++)
-        rlt.number*=i;
+    Data rlt=x;
+    Data one=InttoData(1);
+    for(Data i=x-one;i=i-one;i>=one){
+        rlt=rlt*i;
+        if(rlt.number.size()>100);
+            //error
+    }
     return rlt;
 }
 
@@ -145,6 +85,12 @@ Data Sin(Data x)
     rlt.number=0;
     rlt.symbol=0;
     return rlt;
+}
+
+Data Abs(Data x)
+{
+    x.symbol=1;
+    return x;
 }
 
 Data LogProcessor()
@@ -234,18 +180,25 @@ Data Read(int symbol)
         //读取数字
         rlt.number.init();
         rlt.symbol=1;
+        rlt.point=0;
         if(input>'9'||input<'0'){
             perror("syntax error!\n");
             exit(-1);
         }
         vector tmp;
+        int pointPos=0;
         tmp.init();
-        while(input<='9'&&input>='0'){
-            tmp.push_back(input-'0');
+        while((input<='9'&&input>='0')||(input=='.')){
+            if(input=='.')
+                rlt.point=pointPos;
+            else   
+                tmp.push_back(input-'0');
+            pointPos++;
             input=getchar();
         }
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
+        if(rlt.point) rlt.point=rlt.number.size()-rlt.point;
         if(input=='e'){
             rlt=rlt*E;
         }
@@ -290,13 +243,13 @@ Data Cal()
                 Push(st,InitStackMember(Read(-1)));
                 break;
 			case '*':
-                Top(st)->data=Mul(Top(st)->data,Read(1));
+                Top(st)->data=(Top(st)->data)*Read(1);
                 break;
 			case '/':
-                Top(st)->data=Div(Top(st)->data,Read(1));
+                Top(st)->data=(Top(st)->data)/Read(1);
                 break;
             case '%':
-                Top(st)->data=Mod(Top(st)->data,Read(1));
+                Top(st)->data=(Top(st)->data)%Read(1);
                 break;
 			default:
                 perror("illegal word!\n");
@@ -308,7 +261,7 @@ Data Cal()
     rlt.number=0;
     rlt.symbol=1;
 	while(!Empty(st)){
-		rlt=Add(rlt,Top(st)->data);
+		rlt=rlt+Top(st)->data;
 		Pop(st);
 	}
     free(st);  //计算完后

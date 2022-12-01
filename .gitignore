@@ -5,3 +5,6 @@
 /task
 /test
 test.c
+create_test_data.c
+get_test_ans.c
+/testfile
