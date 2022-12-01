@@ -1,15 +1,6 @@
 #include"operation.h"
 #include<stdio.h>
 
-void Write(Data x)
-{
-    if(x.symbol<0) putchar('-');
-    for(int i=x.number.size()-1;i>=0;i--){
-        printf("%d",x.number[i]);
-        if(x.point&&i==x.point) putchar('.');
-    }
-    putchar('\n');
-}
 
 Data Read()
 {
@@ -35,6 +26,7 @@ Data Read()
         pointPos++;
         input=getchar();
     }
+    
     for(int i=tmp.size()-1;i>=0;i--)
         rlt.number.push_back(tmp[i]);
     if(rlt.point) rlt.point=rlt.number.size()-rlt.point;
@@ -47,7 +39,7 @@ int main()
     //freopen("testout.txt","w",stdout);
     Data x,y;
     x=Read(),y=Read();
-    Write(x*y);
+    Write(x/y);
     /*scanf("%d\n",&n);
     for(int i=1;i<=n;i++)
         x=Read(),y=Read(),Write(x+y);
