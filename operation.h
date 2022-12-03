@@ -308,6 +308,7 @@ Data operator/(const Data &a,const Data &b)
     Data x=a,y=b;
     Data ans;
     Data rlt = InttoData(0);
+    x.symbol = y.symbol = 1;
     while (!x.number[x.number.size() - 1]&& rlt.point + 1 < rlt.number.size())
         x.number.pop_back();
     while (!y.number[y.number.size() - 1]&& rlt.point + 1 < rlt.number.size())
@@ -349,7 +350,7 @@ Data operator/(const Data &a,const Data &b)
         swap(&ans.number[i], &ans.number[ans.number.size() - 1 - i]);
     while (ans.number.size() <= ans.point)
         ans.number.push_back(0);
-    ans.symbol = x.symbol * y.symbol;
+    ans.symbol = a.symbol * b.symbol;
     while (!ans.number[ans.number.size() - 1] && ans.point + 1 < ans.number.size())
         ans.number.pop_back();
     ClearZero(ans);
