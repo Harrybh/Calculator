@@ -357,8 +357,10 @@ Data operator/(const Data &a,const Data &b)
     return ans;
 }
 
-Data operator%(const Data &x, const Data &y)
+Data operator%(const Data &x, const Data &yy)
 {
+    Data y = yy;
+    y.symbol = 1;
     if (x.number.size() < y.number.size())
         return InttoData(0);
     Data rlt = InttoData(0), newX = x;
@@ -377,6 +379,7 @@ Data operator%(const Data &x, const Data &y)
         int p = FindDiv(now, y);
         rlt = now - InttoData(p) * y;
     }
+    rlt.symbol = x.symbol * yy.symbol;
     return rlt;
 }
 
