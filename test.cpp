@@ -39,7 +39,8 @@ int main()
     //freopen("testout.txt","w",stdout);
     Data x,y;
     x=Read(),y=Read();
-    Write(x/y);
+    Write(x-y);
+    Write(cos(Pi));
     /*scanf("%d\n",&n);
     for(int i=1;i<=n;i++)
         x=Read(),y=Read(),Write(x+y);

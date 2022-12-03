@@ -1,13 +1,37 @@
 #include <stdbool.h>
 #include "data.h"
+#define POINT_LIMIT 50
 void Write(Data x)
 {
-    if(x.symbol<0) putchar('-');
-    for(int i=x.number.size()-1;i>=0;i--){
-        printf("%d",x.number[i]);
-        if(x.point&&i==x.point) putchar('.');
+    if (x.symbol < 0)
+        putchar('-');
+    for (int i = x.number.size() - 1; i >= 0; i--)
+    {
+        printf("%d", x.number[i]);
+        if (x.point && i == x.point)
+            putchar('.');
     }
     putchar('\n');
+}
+void ClearZero(Data &x)
+{
+    if (x.point < 50)
+        return;
+    Data y;
+    y.number.init();
+    y.point = POINT_LIMIT;
+    y.symbol = x.symbol;
+    bool flag = 0;
+    for (int i = x.point - POINT_LIMIT; i < x.number.Len; i++)
+    {
+        if (x.number[i])
+            flag = 1;
+        if (flag)
+            y.number.push_back(x.number[i]);
+        else
+            y.point--;
+    }
+    x = y;
 }
 const int maxn = 1e6 + 10;
 const int mod = 998244353, gs = 3;
@@ -128,6 +152,7 @@ Data operator-(const Data &x, const Data &y)
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    ClearZero(rlt);
     return rlt;
 }
 
@@ -196,6 +221,7 @@ Data operator+(const Data &x, const Data &y)
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    ClearZero(rlt);
     return rlt;
 }
 
@@ -226,16 +252,19 @@ Data operator*(const Data &x, const Data &y)
     }
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    ClearZero(rlt);
     return rlt;
 }
-int FindDiv(const Data &x,const Data &y)
+int FindDiv(const Data &x, const Data &y)
 {
     int l = 0, r = 9, ans = 0;
-    while(l<=r)
+    while (l <= r)
     {
-        int mid=l+r>>1;
-        if(y*InttoData(mid)>=x)r=mid-1;
-        else l=mid+1,ans=mid;
+        int mid = l + r >> 1;
+        if (y * InttoData(mid) >= x)
+            r = mid - 1;
+        else
+            l = mid + 1, ans = mid;
     }
     return ans;
 }
@@ -243,9 +272,11 @@ Data operator/(Data x, Data y)
 {
     Data ans;
     Data rlt = InttoData(0);
-    while (!x.number[x.number.size() - 1])x.number.pop_back();
-    while (!y.number[y.number.size() - 1])y.number.pop_back();
-    ans.point = x.point - y.point +  y.number.size() - x.number.size() - 1; 
+    while (!x.number[x.number.size() - 1])
+        x.number.pop_back();
+    while (!y.number[y.number.size() - 1])
+        y.number.pop_back();
+    ans.point = x.point - y.point + y.number.size() - x.number.size() - 1;
     Data newX = x;
     x.point = 0;
     y.point = 0;
@@ -256,34 +287,42 @@ Data operator/(Data x, Data y)
         now.point = 0;
         now.symbol = 1;
         for (int j = 0; j < y.number.size(); j++)
-        {   
+        {
             int p = i + j + 1 - y.number.size();
-            if(p >= 0)
+            if (p >= 0)
             {
                 now.number.push_back(newX.number[i + j + 1 - y.number.size()]);
                 newX.number[i + j + 1 - y.number.size()] = 0;
             }
-            else now.number.push_back(0);
+            else
+                now.number.push_back(0);
         }
         now = now + rlt * InttoData(10);
-        int p = FindDiv(now,y);
+        int p = FindDiv(now, y);
         rlt = now - InttoData(p) * y;
         ans.number.push_back(p);
         ans.point++;
-        if(rlt.number.size() == 1&& rlt.number[0] == 0)break;
-        if(ans.point>24)break;
+        if (rlt.number.size() == 1 && rlt.number[0] == 0 && i + 1 - y.number.size() < 0)
+            break;
+        if (ans.point > POINT_LIMIT - 1)
+            break;
     }
-    while(ans.point < 0)ans.point++,ans.number.push_back(0);
-    for(int i = 0;i<=(ans.number.size()-1)/2;i++)swap(&ans.number[i],&ans.number[ans.number.size() - 1 - i]);
-    while(ans.number.size()<=ans.point)ans.number.push_back(0);
+    while (ans.point < 0)
+        ans.point++, ans.number.push_back(0);
+    for (int i = 0; i <= (ans.number.size() - 1) / 2; i++)
+        swap(&ans.number[i], &ans.number[ans.number.size() - 1 - i]);
+    while (ans.number.size() <= ans.point)
+        ans.number.push_back(0);
     ans.symbol = x.symbol * y.symbol;
     while (!ans.number[ans.number.size() - 1] && ans.point + 1 < ans.number.size())
         ans.number.pop_back();
+    ClearZero(ans);
     return ans;
 }
-Data operator % (const Data &x, const Data &y)
+Data operator%(const Data &x, const Data &y)
 {
-    if(x.number.size()<y.number.size())return InttoData(0);
+    if (x.number.size() < y.number.size())
+        return InttoData(0);
     Data rlt = InttoData(0), newX = x;
     for (int i = x.number.size() - 1; i >= y.number.size() - 1; i--)
     {
@@ -297,34 +336,42 @@ Data operator % (const Data &x, const Data &y)
             newX.number[i + j + 1 - y.number.size()] = 0;
         }
         now = now + rlt * InttoData(10);
-        int p = FindDiv(now,y);
+        int p = FindDiv(now, y);
         rlt = now - InttoData(p) * y;
     }
     return rlt;
 }
 
-#define PROCESS_TIMES 51
+#define PROCESS_TIMES 10
 Data cos(Data x)
 {
     Data nowNumber = x * x / InttoData(2);
-    Data finalAns = InttoData(1) - nowNumber; 
-    for(int i = 2; i <= PROCESS_TIMES; i++)
+    Data finalAns = InttoData(1) - nowNumber;
+   // Write(finalAns);
+    for (int i = 2; i <= PROCESS_TIMES; i++)
     {
-        nowNumber = nowNumber * x / InttoData(i*2-1) * x / InttoData(i<<1);
-        if(i&1)finalAns =  finalAns - nowNumber;
-        else finalAns = finalAns + nowNumber;
+        nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
+       // printf("now:\n");
+      //  Write(nowNumber);
+        if (i & 1)
+            finalAns = finalAns - nowNumber;
+        else
+            finalAns = finalAns + nowNumber;
+      //  Write(finalAns);
     }
     return finalAns;
 }
 Data sin(Data x)
 {
     Data nowNumber = x * x / InttoData(6) * x;
-    Data finalAns = x - nowNumber; 
-    for(int i = 2; i <= PROCESS_TIMES; i++)
+    Data finalAns = x - nowNumber;
+    for (int i = 2; i <= PROCESS_TIMES; i++)
     {
-        nowNumber = nowNumber * x / InttoData(i<<1) * x / InttoData(i<<1|1);
-        if(i&1)finalAns =  finalAns - nowNumber;
-        else finalAns = finalAns + nowNumber;
+        nowNumber = nowNumber * x / InttoData(i << 1) * x / InttoData(i << 1 | 1);
+        if (i & 1)
+            finalAns = finalAns - nowNumber;
+        else
+            finalAns = finalAns + nowNumber;
     }
     return finalAns;
 }
