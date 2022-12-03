@@ -94,8 +94,25 @@ bool operator>=(const Data &x, const Data &y)
     return x.point > y.point;
 }
 
+Data operator+(const Data &x, const Data &y);
+Data operator-(const Data &x, const Data &y);
+Data operator*(const Data &x, const Data &y);
+Data operator/(Data x, Data y);
+
 Data operator-(const Data &x, const Data &y)
 {
+    if (x.symbol < 0 && y.symbol > 0)
+    {
+        Data Posy = y;
+        Posy.symbol = -1;
+        return x + Posy;
+    }
+    if (x.symbol > 0 && y.symbol < 0)
+    {
+        Data Posy = y;
+        Posy.symbol = 1;
+        return x + Posy;
+    }
     Data rlt;
     vector left, right;
     int leftPoint, rightPoint;
@@ -137,13 +154,13 @@ Data operator+(const Data &x, const Data &y)
     {
         Data Posx = x;
         Posx.symbol = 1;
-        return y - x;
+        return y - Posx;
     }
     if (x.symbol > 0 && y.symbol < 0)
     {
         Data Posy = y;
         Posy.symbol = 1;
-        return x - y;
+        return x - Posy;
     }
     Data rlt;
     rlt.number.init();
@@ -243,8 +260,8 @@ Data operator/(Data x, Data y)
 {
     Data ans;
     Data rlt = InttoData(0);
-    while (!x.number[x.number.size() - 1])x.number.pop_back();
-    while (!y.number[y.number.size() - 1])y.number.pop_back();
+    while (!x.number[x.number.size() - 1]&& rlt.point + 1 < rlt.number.size())x.number.pop_back();
+    while (!y.number[y.number.size() - 1]&& rlt.point + 1 < rlt.number.size())y.number.pop_back();
     ans.point = x.point - y.point +  y.number.size() - x.number.size() - 1; 
     Data newX = x;
     x.point = 0;

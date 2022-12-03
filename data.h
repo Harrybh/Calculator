@@ -167,12 +167,20 @@ Data InttoData(int x)
     Data rlt;
     rlt.number.init();
     rlt.symbol=x<0?-1:1;
+    x=x<0?-x:x;
     while(x){
         rlt.number.push_back(x%10);
         x/=10;
     }
     rlt.point=0;
     return rlt;
+}
+
+Data Error(int x)
+{
+    Data error;
+    error.point=-x;
+    return error;
 }
 
 //初始化栈
