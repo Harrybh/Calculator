@@ -1,21 +1,26 @@
 #include <stdbool.h>
 #include "data.h"
-#define POINT_LIMIT 50
+
+#define POINT_LIMIT 100
+#define PROCESS_TIMES 50
+
 void Write(Data x)
 {
     if (x.symbol < 0)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
+        if(i<x.point-50) break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');
     }
     putchar('\n');
 }
+
 void ClearZero(Data &x)
 {
-    if (x.point < 50)
+    if (x.point < POINT_LIMIT)
         return;
     Data y;
     y.number.init();
@@ -33,10 +38,14 @@ void ClearZero(Data &x)
     }
     x = y;
 }
+
+
+//NTT
 const int maxn = 1e6 + 10;
 const int mod = 998244353, gs = 3;
 int rev[maxn], lim, len;
 int A_tmp[maxn], B_tmp[maxn];
+
 void init(int Len)
 {
     lim = 1, len = 0;
@@ -47,12 +56,14 @@ void init(int Len)
     for (int i = 0; i < lim; i++)
         A_tmp[i] = B_tmp[i] = 0;
 }
+
 inline void swap(int *a, int *b)
 {
     int tmp = *a;
     *a = *b;
     *b = tmp;
 }
+
 int Pow(int a, long long k)
 {
     int ret = 1;
@@ -64,6 +75,7 @@ int Pow(int a, long long k)
     }
     return ret;
 }
+
 void NTT(int *a, int type)
 {
     for (int i = 0; i < lim; i++)
@@ -89,6 +101,7 @@ void NTT(int *a, int type)
             a[i] = a[i] * 1LL * inv % mod;
     }
 }
+
 inline int min(const int &a, const int &b) { return a > b ? b : a; }
 inline int max(const int &a, const int &b) { return b > a ? b : a; }
 inline void Process_NTT(const Data &a, const Data &b, Data *c)
@@ -108,6 +121,15 @@ inline void Process_NTT(const Data &a, const Data &b, Data *c)
     for (int i = 0; i < lim1 + lim2 - 1; i++)
         c->number[i] = A_tmp[i];
 }
+
+
+//加减乘除模
+bool operator>=(const Data &x, const Data &y);
+Data operator+(const Data &x, const Data &y);
+Data operator-(const Data &x, const Data &y);
+Data operator*(const Data &x, const Data &y);
+Data operator/(const Data &a,const Data &b);
+
 bool operator>=(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
@@ -116,61 +138,6 @@ bool operator>=(const Data &x, const Data &y)
         if (x.number[i] != y.number[j])
             return x.number[i] > y.number[j];
     return x.point > y.point;
-}
-
-Data operator+(const Data &x, const Data &y);
-Data operator-(const Data &x, const Data &y);
-Data operator*(const Data &x, const Data &y);
-Data operator/(Data x, Data y);
-
-Data operator-(const Data &x, const Data &y)
-{
-    if (x.symbol < 0 && y.symbol > 0)
-    {
-        Data Posy = y;
-        Posy.symbol = -1;
-        return x + Posy;
-    }
-    if (x.symbol > 0 && y.symbol < 0)
-    {
-        Data Posy = y;
-        Posy.symbol = 1;
-        return x + Posy;
-    }
-    Data rlt;
-    vector left, right;
-    int leftPoint, rightPoint;
-    left.init();
-    right.init();
-    rlt.number.init();
-    if (x >= y)
-        left = x.number, right = y.number, leftPoint = x.point, rightPoint = y.point, rlt.symbol = 1;
-    else
-        left = y.number, right = x.number, leftPoint = y.point, rightPoint = x.point, rlt.symbol = -1;
-    rlt.number.push_back(0);
-    for (int i = 0, j = 0, k = 0; i < left.size() || j < right.size(); k++)
-    {
-        int leftNow, rightNow;
-        if (i < leftPoint - rightPoint || j >= right.size())
-            rightNow = 0;
-        else
-            rightNow = right[j];
-        if (j < rightPoint - leftPoint || i >= left.size())
-            leftNow = 0;
-        else
-            leftNow = left[i];
-        rlt.number.push_back(leftNow + rlt.number[k] >= rightNow ? 0 : -1);
-        rlt.number[k] += leftNow + rlt.number[k] >= rightNow ? leftNow - rightNow : leftNow + 10 - rightNow;
-        if (j >= rightPoint - leftPoint && i < left.size())
-            i++;
-        if (i > leftPoint - rightPoint && j < right.size())
-            j++;
-    }
-    rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
-    while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
-        rlt.number.pop_back();
-    ClearZero(rlt);
-    return rlt;
 }
 
 Data operator+(const Data &x, const Data &y)
@@ -242,6 +209,56 @@ Data operator+(const Data &x, const Data &y)
     return rlt;
 }
 
+Data operator-(const Data &x, const Data &y)
+{
+    if (x.symbol < 0 && y.symbol > 0)
+    {
+        Data Posy = y;
+        Posy.symbol = -1;
+        return x + Posy;
+    }
+    if (x.symbol > 0 && y.symbol < 0)
+    {
+        Data Posy = y;
+        Posy.symbol = 1;
+        return x + Posy;
+    }
+    Data rlt;
+    vector left, right;
+    int leftPoint, rightPoint;
+    left.init();
+    right.init();
+    rlt.number.init();
+    if (x >= y)
+        left = x.number, right = y.number, leftPoint = x.point, rightPoint = y.point, rlt.symbol = 1;
+    else
+        left = y.number, right = x.number, leftPoint = y.point, rightPoint = x.point, rlt.symbol = -1;
+    rlt.number.push_back(0);
+    for (int i = 0, j = 0, k = 0; i < left.size() || j < right.size(); k++)
+    {
+        int leftNow, rightNow;
+        if (i < leftPoint - rightPoint || j >= right.size())
+            rightNow = 0;
+        else
+            rightNow = right[j];
+        if (j < rightPoint - leftPoint || i >= left.size())
+            leftNow = 0;
+        else
+            leftNow = left[i];
+        rlt.number.push_back(leftNow + rlt.number[k] >= rightNow ? 0 : -1);
+        rlt.number[k] += leftNow + rlt.number[k] >= rightNow ? leftNow - rightNow : leftNow + 10 - rightNow;
+        if (j >= rightPoint - leftPoint && i < left.size())
+            i++;
+        if (i > leftPoint - rightPoint && j < right.size())
+            j++;
+    }
+    rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
+    while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
+        rlt.number.pop_back();
+    ClearZero(rlt);
+    return rlt;
+}
+
 Data operator*(const Data &x, const Data &y)
 {
     Data rlt;
@@ -272,6 +289,7 @@ Data operator*(const Data &x, const Data &y)
     ClearZero(rlt);
     return rlt;
 }
+
 int FindDiv(const Data &x, const Data &y)
 {
     int l = 0, r = 9, ans = 0;
@@ -285,8 +303,9 @@ int FindDiv(const Data &x, const Data &y)
     }
     return ans;
 }
-Data operator/(Data x, Data y)
+Data operator/(const Data &a,const Data &b)
 {
+    Data x=a,y=b;
     Data ans;
     Data rlt = InttoData(0);
     while (!x.number[x.number.size() - 1]&& rlt.point + 1 < rlt.number.size())
@@ -336,6 +355,7 @@ Data operator/(Data x, Data y)
     ClearZero(ans);
     return ans;
 }
+
 Data operator%(const Data &x, const Data &y)
 {
     if (x.number.size() < y.number.size())
@@ -359,25 +379,8 @@ Data operator%(const Data &x, const Data &y)
     return rlt;
 }
 
-#define PROCESS_TIMES 10
-Data cos(Data x)
-{
-    Data nowNumber = x * x / InttoData(2);
-    Data finalAns = InttoData(1) - nowNumber;
-   // Write(finalAns);
-    for (int i = 2; i <= PROCESS_TIMES; i++)
-    {
-        nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
-       // printf("now:\n");
-      //  Write(nowNumber);
-        if (i & 1)
-            finalAns = finalAns - nowNumber;
-        else
-            finalAns = finalAns + nowNumber;
-      //  Write(finalAns);
-    }
-    return finalAns;
-}
+
+//函数（泰勒展开）
 Data sin(Data x)
 {
     Data nowNumber = x * x / InttoData(6) * x;
@@ -392,6 +395,26 @@ Data sin(Data x)
     }
     return finalAns;
 }
+
+Data cos(Data x)
+{
+    Data nowNumber = x * x / InttoData(2);
+    Data finalAns = InttoData(1) - nowNumber;
+    // Write(finalAns);
+    for (int i = 2; i <= PROCESS_TIMES; i++)
+    {
+        nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
+        // printf("now:\n");
+        //  Write(nowNumber);
+        if (i & 1)
+            finalAns = finalAns - nowNumber;
+        else
+            finalAns = finalAns + nowNumber;
+        //  Write(finalAns);
+    }
+    return finalAns;
+}
+
 Data tan(Data x)
 {
     return sin(x) / cos(x);

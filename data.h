@@ -129,36 +129,18 @@ typedef struct Stack
 vector getE()
 {
     vector vE;
-    long long a,b,c,d,e;
-    a=27182818284,b=5904523536,c=287471352,d=6624977572,e=4709369995;
-    for(int i=0;i<10;i++)
-        vE.push_back((int)(e%10)),e/=10;
-    for(int i=0;i<10;i++)
-        vE.push_back((int)(d%10)),d/=10;
-    for(int i=0;i<10;i++)
-        vE.push_back((int)(c%10)),c/=10;
-    for(int i=0;i<10;i++)
-        vE.push_back((int)(b%10)),b/=10;
-    for(int i=0;i<=10;i++)
-        vE.push_back((int)(a%10)),a/=10;
+    char sE[300]="271828182845904523536028747135266249775724709369995957496696762772407663035354759457138217852516642742746639193200305992181741359662904357290033429526059563073813232862794349076323382988075319525101901";
+    for(int i=0;i<=100;i++)
+        vE.push_back(sE[100-i]-'0');
     return vE;
 }
 
 vector getPi()
 {
     vector vPi;
-    long long a,b,c,d,e;
-    a=31415926535,b=8979323846,c=2643383279,d=5028841971,e=6939937510;
-    for(int i=0;i<10;i++)
-        vPi.push_back((int)(e%10)),e/=10;
-    for(int i=0;i<10;i++)
-        vPi.push_back((int)(d%10)),d/=10;
-    for(int i=0;i<10;i++)
-        vPi.push_back((int)(c%10)),c/=10;
-    for(int i=0;i<10;i++)
-        vPi.push_back((int)(b%10)),b/=10;
-    for(int i=0;i<=10;i++)
-        vPi.push_back((int)(a%10)),a/=10;
+    char sPi[300]="314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196";
+    for(int i=0;i<=100;i++)
+        vPi.push_back(sPi[100-i]-'0');
     return vPi;
 }
 
@@ -241,6 +223,6 @@ bool Pop(Stack *s)
 }
 
 //常量(自然常量)
-const Data E={getE(),50,1};
+const Data E={getE(),100,1};
 //常量(圆周率)
-const Data Pi={getPi(),50,1};
+const Data Pi={getPi(),100,1};

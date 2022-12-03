@@ -9,16 +9,23 @@ Data ln(Data base)
     if (base2.symbol > 0)
     {
         int flag = -1;
-        Data result = InttoData(0), pownumber = InttoData(1), facnumber = InttoData(1);
-
+        Data result = InttoData(0), pownumber = InttoData(1), facnumber = InttoData(1),x;
+        Write(pownumber);
+        Write(base2);
         for (int i = 1; i <= 50; i++)
         {
             flag = -flag;
-            pownumber = pownumber * base2;
+            Write(pownumber);
+            x = base2 * pownumber;
+            pownumber=x;
+            printf("pownumber=");
             Write(pownumber);
             facnumber = facnumber * InttoData(i);
+            printf("facnumber=");
             Write(facnumber);
             result = flag > 0 ? result + (pownumber / facnumber) : result - (pownumber / facnumber);
+            printf("result=");
+            Write(result);
         }
         return result;
     }
@@ -196,13 +203,17 @@ Data Exp(Data base, Data index)
 int main()
 {
     Data x, y;
-    x = InttoData(-3);
-    y = InttoData(4);
+    x = InttoData(-32345);
+    y = InttoData(453);
+    x.point=3;
+    y.point=2;
     Write(x);
     Write(y);
-    Write(y-x);
-    Write(cos(Pi));
-    //Write(E);
+    Write(x/y);
+    Write(x);
+    Write((E-InttoData(1))*(E-InttoData(1)));
+    Write(ln(E));
+    Write(E);
     //Write(InttoData(1)*E);
     return 0;
 }
