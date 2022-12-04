@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include "data.h"
 
-#define POINT_LIMIT 100
 #define PROCESS_TIMES 50
 
 void Write(Data x)
@@ -17,6 +16,14 @@ void Write(Data x)
             putchar('.');
     }
     putchar('\n');
+}
+
+void IsZero(Data &x)
+{
+    bool flag=true;
+    for(int i=0;i<x.number.size();i++)
+        if(x.number[i]) flag=false;
+    if(flag) x.symbol=1;
 }
 
 void ClearZero(Data &x)
@@ -133,10 +140,19 @@ bool operator>=(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
         return x.number.size() - x.point > y.number.size() - y.point;
-    for (int i = x.number.size() - 1, j = y.number.size() - 1; i >= 0 && j >= 0; i--, j--)
+    int i,j;
+    for (i = x.number.size() - 1, j = y.number.size() - 1; i >= 0 && j >= 0; i--, j--)
         if (x.number[i] != y.number[j])
             return x.number[i] > y.number[j];
-    return x.point > y.point;
+    while(i>=0){
+        if(x.number[i]) return true;
+        i--;
+    }
+    while(j>=0){
+        if(y.number[j]) return true;
+        j--;
+    }
+    return true;
 }
 
 Data operator+(const Data &x, const Data &y)
@@ -204,6 +220,7 @@ Data operator+(const Data &x, const Data &y)
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    IsZero(rlt);
     ClearZero(rlt);
     return rlt;
 }
@@ -229,9 +246,9 @@ Data operator-(const Data &x, const Data &y)
     right.init();
     rlt.number.init();
     if (x >= y)
-        left = x.number, right = y.number, leftPoint = x.point, rightPoint = y.point, rlt.symbol = 1;
+        left = x.number, right = y.number, leftPoint = x.point, rightPoint = y.point, rlt.symbol = x.symbol;
     else
-        left = y.number, right = x.number, leftPoint = y.point, rightPoint = x.point, rlt.symbol = -1;
+        left = y.number, right = x.number, leftPoint = y.point, rightPoint = x.point, rlt.symbol = -x.symbol;
     rlt.number.push_back(0);
     for (int i = 0, j = 0, k = 0; i < left.size() || j < right.size(); k++)
     {
@@ -254,6 +271,7 @@ Data operator-(const Data &x, const Data &y)
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    IsZero(rlt);
     ClearZero(rlt);
     return rlt;
 }
@@ -285,6 +303,7 @@ Data operator*(const Data &x, const Data &y)
     }
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
+    IsZero(rlt);
     ClearZero(rlt);
     return rlt;
 }
@@ -354,6 +373,7 @@ Data operator/(const Data &a, const Data &b)
     ans.symbol = a.symbol * b.symbol;
     while (!ans.number[ans.number.size() - 1] && ans.point + 1 < ans.number.size())
         ans.number.pop_back();
+    IsZero(rlt);
     ClearZero(ans);
     return ans;
 }
@@ -381,6 +401,7 @@ Data operator%(const Data &x, const Data &yy)
         rlt = now - InttoData(p) * y;
     }
     rlt.symbol = x.symbol * yy.symbol;
+    IsZero(rlt);
     return rlt;
 }
 
