@@ -314,10 +314,10 @@ int FindDiv(const Data &x, const Data &y)
     while (l <= r)
     {
         int mid = l + r >> 1;
-        if (y * InttoData(mid) >= x)
-            r = mid - 1;
-        else
+        if ( x >= y * InttoData(mid))
             l = mid + 1, ans = mid;
+        else
+            r = mid - 1;
     }
     return ans;
 }
@@ -354,7 +354,8 @@ Data operator/(const Data &a, const Data &b)
             else
                 now.number.push_back(0);
         }
-        now = now + rlt * InttoData(10);
+       
+        now = now + rlt * InttoData(10); 
         int p = FindDiv(now, y);
         rlt = now - InttoData(p) * y;
         ans.number.push_back(p);
@@ -373,7 +374,7 @@ Data operator/(const Data &a, const Data &b)
     ans.symbol = a.symbol * b.symbol;
     while (!ans.number[ans.number.size() - 1] && ans.point + 1 < ans.number.size())
         ans.number.pop_back();
-    IsZero(rlt);
+    IsZero(ans);
     ClearZero(ans);
     return ans;
 }
@@ -424,18 +425,19 @@ Data sin(Data x)
 Data cos(Data x)
 {
     Data nowNumber = x * x / InttoData(2);
+    Write(x*x/ InttoData(2));
     Data finalAns = InttoData(1) - nowNumber;
-    // Write(finalAns);
+     Write(nowNumber);
     for (int i = 2; i <= PROCESS_TIMES; i++)
     {
         nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
-        // printf("now:\n");
-        //  Write(nowNumber);
+         printf("now:\n");
+          Write(nowNumber);
         if (i & 1)
             finalAns = finalAns - nowNumber;
         else
             finalAns = finalAns + nowNumber;
-        //  Write(finalAns);
+          Write(finalAns);
     }
     return finalAns;
 }
