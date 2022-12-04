@@ -10,7 +10,8 @@ void Write(Data x)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
-        if(i<x.point-50) break;
+        if (i < x.point - 50)
+            break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');
@@ -39,8 +40,7 @@ void ClearZero(Data &x)
     x = y;
 }
 
-
-//NTT
+// NTT
 const int maxn = 1e6 + 10;
 const int mod = 998244353, gs = 3;
 int rev[maxn], lim, len;
@@ -122,13 +122,12 @@ inline void Process_NTT(const Data &a, const Data &b, Data *c)
         c->number[i] = A_tmp[i];
 }
 
-
 //加减乘除模
 bool operator>=(const Data &x, const Data &y);
 Data operator+(const Data &x, const Data &y);
 Data operator-(const Data &x, const Data &y);
 Data operator*(const Data &x, const Data &y);
-Data operator/(const Data &a,const Data &b);
+Data operator/(const Data &a, const Data &b);
 
 bool operator>=(const Data &x, const Data &y)
 {
@@ -303,18 +302,20 @@ int FindDiv(const Data &x, const Data &y)
     }
     return ans;
 }
-Data operator/(const Data &a,const Data &b)
+Data operator/(const Data &a, const Data &b)
 {
-    Data x=a,y=b;
+    Data x, y;
+    x = a, y = b;
     Data ans;
     Data rlt = InttoData(0);
     x.symbol = y.symbol = 1;
-    while (!x.number[x.number.size() - 1]&& rlt.point + 1 < rlt.number.size())
+    while (!x.number[x.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         x.number.pop_back();
-    while (!y.number[y.number.size() - 1]&& rlt.point + 1 < rlt.number.size())
+    while (!y.number[y.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         y.number.pop_back();
     ans.point = x.point - y.point + y.number.size() - x.number.size() - 1;
-    Data newX = x;
+    Data newX;
+    newX = x;
     x.point = 0;
     y.point = 0;
     for (int i = x.number.size() - 1;; i--)
@@ -382,7 +383,6 @@ Data operator%(const Data &x, const Data &yy)
     rlt.symbol = x.symbol * yy.symbol;
     return rlt;
 }
-
 
 //函数（泰勒展开）
 Data sin(Data x)
