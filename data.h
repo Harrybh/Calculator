@@ -153,6 +153,7 @@ Data InttoData(int x)
     rlt.number.init();
     rlt.symbol=x<0?-1:1;
     x=x<0?-x:x;
+    if(!x) rlt.number.push_back(x);
     while(x){
         rlt.number.push_back(x%10);
         x/=10;
