@@ -14,14 +14,8 @@ Data ln(Data base)
         {
             flag = -flag;
             pownumber=base2 * pownumber;
-            printf("pownumber=");
-            Write(pownumber);
             facnumber = facnumber * InttoData(i);
-            printf("facnumber=");
-            Write(facnumber);
             result = flag > 0 ? result + (pownumber / facnumber) : result - (pownumber / facnumber);
-            printf("result=");
-            Write(result);
         }
         return result;
     }
@@ -207,10 +201,6 @@ int main()
     Write(x);
     Write(y);
     Write(x-y);
-    Write(x);
-    Write((E-InttoData(1))*(E-InttoData(1)));
-    Write(sin(Pi));
-    Write(E);
-    //Write(InttoData(1)*E);
+    Write(ln(E));
     return 0;
 }

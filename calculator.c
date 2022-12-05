@@ -79,20 +79,6 @@ Data Fac(Data x)
     return rlt;
 }
 
-Data Sin(Data x)
-{
-    Data rlt;
-    rlt.number=0;
-    rlt.symbol=0;
-    return rlt;
-}
-
-Data Abs(Data x)
-{
-    x.symbol=1;
-    return x;
-}
-
 Data LogProcessor()
 {
     Data rlt;
