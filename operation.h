@@ -9,8 +9,7 @@ void Write(Data x)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
-        if (i < x.point - 50)
-            break;
+        if (i < x.point - 50) break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');
@@ -18,12 +17,13 @@ void Write(Data x)
     putchar('\n');
 }
 
-void IsZero(Data &x)
+bool IsZero(Data &x)
 {
     bool flag=true;
     for(int i=0;i<x.number.size();i++)
         if(x.number[i]) flag=false;
     if(flag) x.symbol=1;
+    return flag;
 }
 
 void ClearZero(Data &x)
