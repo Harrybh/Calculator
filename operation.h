@@ -9,7 +9,7 @@ void Write(Data x)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
-        if (i < x.point - 50) break;
+        //if (i < x.point - 50) break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');

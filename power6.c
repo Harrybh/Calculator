@@ -5,21 +5,24 @@
 /*利用麦克劳林公式求lnx的函数*/
 Data ln(Data base)
 {
-    Data base2 = base - InttoData(1);
-    if (base2.symbol > 0)
+     if (base.symbol > 0)
     {
-        int flag = -1;
-        Data result = InttoData(0), now = InttoData(1);
-        for (int i = 1; i <=50; i++)
+        Data base2 = (base - InttoData(1)) / (base + InttoData(1));
+        Data result = base2, now = base2;
+        for (int i = 3; i <= 100; i += 2)
         {
-            flag = -flag;
-            now = now * base2 /InttoData(i);
-            result = flag > 0 ? result + now : result - now;
+            // printf("now:\n");
+            // Write(now);
+            now = now * base2 * base2  / InttoData(i) * InttoData(i - 2) ;
+            result = result + now;
+            // printf("result:\n");
+            // Write(result);
         }
-        return result;
+        return result * InttoData(2);
     }
-    else
+    else{
         return Error(1);
+    }
 }
 
 //求转化后e的指数的函数
