@@ -188,12 +188,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>
@@ -216,12 +220,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>
@@ -244,12 +252,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>
@@ -272,12 +284,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>
@@ -300,12 +316,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>
@@ -328,12 +348,16 @@ background-color: rgb(60, 60, 60);
 color: rgb(255, 255, 255);
 border-radius: 8px;
 font-size: 32px;
+border-style:outset; 
+border-width:1px;
+border-color: rgb(67, 67, 67);
 }
 
 QPushButton:hover { 
     background:  rgb(82, 82, 82);
 }
 QPushButton:pressed{ 
+border-style:inset;
     background: rgb(40, 40, 40);
 }</string>
    </property>

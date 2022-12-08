@@ -2,7 +2,7 @@
 #include "operation.h"
 /* base是底数，index是指数，本函数组合用来将a^b转化为e^b*lna */
 
-/*利用麦克劳林公式求lnx的函数*/
+/*利用泰勒展开求lnx的函数*/
 Data ln(Data base)
 {
      if (base.symbol > 0)
@@ -13,7 +13,7 @@ Data ln(Data base)
         {
             // printf("now:\n");
             // Write(now);
-            now = now * base2 * base2  / InttoData(i) * InttoData(i - 2) ;
+            now = now * base2 * base2 * InttoData(i - 2) / InttoData(i)  ;
             result = result + now;
             // printf("result:\n");
             // Write(result);
@@ -24,6 +24,36 @@ Data ln(Data base)
         return Error(1);
     }
 }
+/*
+Data ln(Data base)
+{
+     if (base.symbol > 0)
+    {
+        Data base1 = base - InttoData(1);
+        Data base2 = base + InttoData(1);
+        Data result = base1 / base2, now = base1, cur = base2;
+        for (int i = 3; i <= 100; i += 2)
+        {
+            // printf("now:\n");
+            // Write(now);
+            now = now * base1 * base1  / InttoData(i) * InttoData(i - 2) ;
+            cur = cur * base2 * base2;
+            if(i % 10 == 0)
+            {
+                now = now / cur;
+                cur = InttoData(1);
+            }
+            result = result + now / cur;
+            // printf("result:\n");
+            // Write(result);
+        }
+        return result * InttoData(2);
+    }
+    else{
+        return Error(1);
+    }
+}
+*/
 
 //求转化后e的指数的函数
 Data Exp(Data base, Data index)
@@ -66,7 +96,7 @@ Data Exp(Data base, Data index)
     result = index * ln(base);
     for (int i = 1; i <= 50; i++)
     {
-        now=now*result/InttoData(i);
+        now = now * result / InttoData(i);
         final = final + now;
     }
     return final;
@@ -75,14 +105,8 @@ Data Exp(Data base, Data index)
 int main()
 {
     Data x, y;
-    x = InttoData(2.06);
-    y = InttoData(-3);
-    // x.point=2;
-    // y.point=2;
-    printf("%d\n", x >= y);
-    Write(x);
-    Write(y);
-    Write(x - y);
+    Write(sin(Pi));
     Write(ln(E));
+    Write(Exp(InttoData(2),InttoData(10)));
     return 0;
 }

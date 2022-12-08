@@ -4,7 +4,7 @@
 
 #define POINT_LIMIT 100
 
-struct vector 
+struct vector //动态数组
 {
     int *Array;
     int Len;
@@ -12,25 +12,25 @@ struct vector
     int *ArrayNew;
     void init()
     {
-        Array = NULL;
-        ArrayNew = NULL;
-        Len = 0;
-        BatchSize = 0;
+        Array = NULL;//存放数组
+        ArrayNew = NULL;//临时存储
+        Len = 0;//数组长度
+        BatchSize = 0;//内存块大小
     }
-    vector()
+    vector()//构造函数
     {
         Array = NULL;
         ArrayNew = NULL;
         Len = 0;
         BatchSize = 0;
     }
-    void clear()
+    void clear()//清空该数组
     {
         if(Len == 0)return ;
         Len = 0;
         free(Array);
     }
-    void push_back(int Num)
+    void push_back(int Num)//向该数组的末尾添加一个元素
     {
         if(Len+1<=BatchSize)
         {
@@ -38,6 +38,7 @@ struct vector
         }
         else 
         {
+            //如果数组长度超过内存块的大小则将块大小乘以2
             if(Len)
             { 
                 BatchSize<<=1;
@@ -55,7 +56,7 @@ struct vector
         }
         
     }
-    void pop_back()
+    void pop_back()//将该数组末尾元素删除
     {
         if(Len < 1)return;
         if(Len == 1)
@@ -65,6 +66,7 @@ struct vector
             BatchSize = 0;
             return;
         }
+        //删除一个元素后如果数组长度小于内存块大小的一半则将内存块大小/2
         if(Len-1 <= (BatchSize>>1))
         {
             BatchSize>>=1;
@@ -99,7 +101,7 @@ struct vector
         return (*this);
     }
 };
-
+//用于储存数字
 typedef struct Data
 {
     vector number;//值

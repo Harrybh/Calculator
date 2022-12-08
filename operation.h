@@ -10,23 +10,25 @@ void Write(Data x)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
-        //if (i < x.point - 50) break;
+        // if (i < x.point - 50) break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');
     }
     putchar('\n');
 }
-
+//判断是否为零
 bool IsZero(Data &x)
 {
-    bool flag=true;
-    for(int i=0;i<x.number.size();i++)
-        if(x.number[i]) flag=false;
-    if(flag) x.symbol=1;
+    bool flag = true;
+    for (int i = 0; i < x.number.size(); i++)
+        if (x.number[i])
+            flag = false;
+    if (flag)
+        x.symbol = 1;
     return flag;
 }
-
+//清楚小数点后多余的零
 void ClearZero(Data &x)
 {
     if (x.point < POINT_LIMIT)
@@ -145,16 +147,20 @@ bool operator>=(const Data &x, const Data &y)
 {
     if (x.number.size() - x.point != y.number.size() - y.point)
         return x.number.size() - x.point > y.number.size() - y.point;
-    int i,j;
+    int i, j;
     for (i = x.number.size() - 1, j = y.number.size() - 1; i >= 0 && j >= 0; i--, j--)
         if (x.number[i] != y.number[j])
             return x.number[i] > y.number[j];
-    while(i>=0){
-        if(x.number[i]) return true;
+    while (i >= 0)
+    {
+        if (x.number[i])
+            return true;
         i--;
     }
-    while(j>=0){
-        if(y.number[j]) return true;
+    while (j >= 0)
+    {
+        if (y.number[j])
+            return true;
         j--;
     }
     return true;
@@ -204,7 +210,7 @@ Data operator+(const Data &x, const Data &y)
         for (i = 0; i < x.number.size(); i++)
             left.push_back(x.number[i]);
     }
-    //计算
+    // 计算
     int numNow, extra = 0; // extra进位
     int len_max;
     len_max = left.size() > right.size() ? left.size() : right.size();
@@ -219,7 +225,7 @@ Data operator+(const Data &x, const Data &y)
         }
         rlt.number.push_back(numNow);
     }
-    //最后一位可能进位
+    // 最后一位可能进位
     if (extra)
         rlt.number.push_back(extra);
     rlt.point = leftPoint > rightPoint ? leftPoint : rightPoint;
@@ -285,7 +291,7 @@ Data operator*(const Data &x, const Data &y)
 {
     Data rlt;
     rlt.number.init();
-    rlt.point = x.point + y.point; //小数点
+    rlt.point = x.point + y.point; // 小数点
     rlt.symbol = x.symbol * y.symbol;
     int i, j;
     for (i = 0; i < x.number.size() + y.number.size(); i++)
@@ -319,7 +325,7 @@ int FindDiv(const Data &x, const Data &y)
     while (l <= r)
     {
         int mid = l + r >> 1;
-        if ( x >= y * InttoData(mid))
+        if (x >= y * InttoData(mid))
             l = mid + 1, ans = mid;
         else
             r = mid - 1;
@@ -359,8 +365,8 @@ Data operator/(const Data &a, const Data &b)
             else
                 now.number.push_back(0);
         }
-       
-        now = now + rlt * InttoData(10); 
+
+        now = now + rlt * InttoData(10);
         int p = FindDiv(now, y);
         rlt = now - InttoData(p) * y;
         ans.number.push_back(p);
@@ -433,17 +439,17 @@ Data Cos(Data x)
 {
     Data nowNumber = x * x / InttoData(2);
     Data finalAns = InttoData(1) - nowNumber;
-     Write(nowNumber);
+    Write(nowNumber);
     for (int i = 2; i <= PROCESS_TIMES; i++)
     {
         nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
-         printf("now:\n");
-          Write(nowNumber);
+        printf("now:\n");
+        Write(nowNumber);
         if (i & 1)
             finalAns = finalAns - nowNumber;
         else
             finalAns = finalAns + nowNumber;
-          Write(finalAns);
+        Write(finalAns);
     }
     return finalAns;
 }
