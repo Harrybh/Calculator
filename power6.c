@@ -56,7 +56,7 @@ Data ln(Data base)
 */
 
 //求转化后e的指数的函数
-Data Exp(Data base, Data index)
+Data exp(Data base, Data index)
 {
     /*麦克劳林展开：ln(x+1)=x-x^2/2!+x^3/3!-...*/
     int flag = 1,symbol=1;                                                         //用来决定展开式每一项的正负号
@@ -108,6 +108,6 @@ int main()
     Data x, y;
     Write(Sin(Pi));
     Write(ln(E));
-    Write(Exp(InttoData(2),InttoData(10)));
+    Write(exp(InttoData(2),InttoData(10)));
     return 0;
 }
