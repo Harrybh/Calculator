@@ -52,7 +52,7 @@ Data Exp(Data base, Data index)
         }
         else
         {
-            if (!(index.number[0] & 1))
+            if (index.number[0] % 2)
                 final.symbol = -1;
         }
     }
@@ -66,8 +66,7 @@ Data Exp(Data base, Data index)
     result = index * ln(base);
     for (int i = 1; i <= 50; i++)
     {
-        for (int j = 1; j <= i; j++)
-            now = now * result / InttoData(j);
+        now=now*result/InttoData(i);
         final = final + now;
     }
     return final;

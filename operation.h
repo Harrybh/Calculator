@@ -3,6 +3,7 @@
 
 #define PROCESS_TIMES 50
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 void Write(Data x)
 {
     if (x.symbol < 0)
@@ -46,7 +47,9 @@ void ClearZero(Data &x)
     }
     x = y;
 }
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 // NTT
 const int maxn = 1e6 + 10;
 const int mod = 998244353, gs = 3;
@@ -128,7 +131,9 @@ inline void Process_NTT(const Data &a, const Data &b, Data *c)
     for (int i = 0; i < lim1 + lim2 - 1; i++)
         c->number[i] = A_tmp[i];
 }
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 //加减乘除模
 bool operator>=(const Data &x, const Data &y);
 Data operator+(const Data &x, const Data &y);
@@ -405,9 +410,11 @@ Data operator%(const Data &x, const Data &yy)
     IsZero(rlt);
     return rlt;
 }
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 //函数（泰勒展开）
-Data sin(Data x)
+Data Sin(Data x)
 {
     Data nowNumber = x * x / InttoData(6) * x;
     Data finalAns = x - nowNumber;
@@ -422,10 +429,9 @@ Data sin(Data x)
     return finalAns;
 }
 
-Data cos(Data x)
+Data Cos(Data x)
 {
     Data nowNumber = x * x / InttoData(2);
-    Write(x*x/ InttoData(2));
     Data finalAns = InttoData(1) - nowNumber;
      Write(nowNumber);
     for (int i = 2; i <= PROCESS_TIMES; i++)
@@ -442,7 +448,39 @@ Data cos(Data x)
     return finalAns;
 }
 
-Data tan(Data x)
+Data Tan(Data x)
 {
-    return sin(x) / cos(x);
+    return Sin(x) / Cos(x);
 }
+
+Data Fac(Data x)
+{
+    if(x.symbol<0||x.point!=0){
+        perror("algorithmic error!\n");
+        exit(-1);
+    }
+    Data rlt=x;
+    Data one=InttoData(1);
+    for(Data i=x-one;i>=one;i=i-one){
+        rlt=rlt*i;
+        if(rlt.number.size()>100);
+            //error
+    }
+    return rlt;
+}
+
+Data Abs(Data x)
+{
+    x.symbol=x.symbol>0?x.symbol:-x.symbol;
+    return x;
+}
+
+Data Sqrt(Data x)
+{
+    Data half;
+    half=InttoData(5);
+    half.number.push_back(0);
+    half.point=1;
+    return Exp(x,half);
+}
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/

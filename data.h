@@ -103,8 +103,15 @@ struct vector
 typedef struct Data
 {
     vector number;//值
-    int point;
+    int point; //小数点位数
     int symbol;//符号
+    int error; //错误属性
+    /*
+    1. 非法字符
+    2. 语法错误
+    3. 数学错误
+    4. 数字过大
+    */
     Data &operator = (const Data &b)
     {
         number = b.number;
@@ -152,6 +159,7 @@ Data InttoData(int x)
     Data rlt;
     rlt.number.init();
     rlt.symbol=x<0?-1:1;
+    rlt.error=0;
     x=x<0?-x:x;
     if(!x) rlt.number.push_back(x);
     while(x){
@@ -165,7 +173,8 @@ Data InttoData(int x)
 Data Error(int x)
 {
     Data error;
-    error.point=-x;
+    error=InttoData(0);
+    error.error=x;
     return error;
 }
 
@@ -227,6 +236,6 @@ bool Pop(Stack *s)
 }
 
 //常量(自然常量)
-const Data E={getE(),POINT_LIMIT,1};
+const Data E={getE(),POINT_LIMIT,1,0};
 //常量(圆周率)
-const Data Pi={getPi(),POINT_LIMIT,1};
+const Data Pi={getPi(),POINT_LIMIT,1,0};

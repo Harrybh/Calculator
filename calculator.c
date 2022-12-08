@@ -4,19 +4,6 @@
 #include<stdbool.h>
 #include"data.h"
 
-//幂
-Data Pow(Data a,Data b);
-//对数函数
-Data Log(Data a,Data b);
-//阶乘
-Data Fac(Data x);
-//三角函数
-Data Sin(Data x);
-Data Cos(Data x);
-Data Tan(Data x);
-//开方
-Data Sqrt(Data x);
-Data Abs(Data x);
 //处理不同类型的对数函数
 Data LogProcessor();
 //识别当前input的字符，找到对应函数并返回函数值
@@ -53,42 +40,17 @@ int main()
     return 0;
 }
 
-Data Pow(Data a,Data b)
-{
-    Data rlt;
-    rlt.symbol=a.symbol;
-    rlt.number=a.number;
-    for(int i=2;i<=b.number;i++)
-        rlt.number*=a.number;
-    return rlt;
-}
-
-Data Fac(Data x)
-{
-    if(x.number<=0||x.point!=0){
-        perror("algorithmic error!\n");
-        exit(-1);
-    }
-    Data rlt=x;
-    Data one=InttoData(1);
-    for(Data i=x-one;i=i-one;i>=one){
-        rlt=rlt*i;
-        if(rlt.number.size()>100);
-            //error
-    }
-    return rlt;
-}
-
 Data LogProcessor()
 {
     Data rlt;
+    rlt.error=0;
     rlt.number=10;
     rlt.symbol=1;
     input=getchar();
     switch (input)
     {
         case 'o':
-            getchar();
+            if(getchar()!='g') return Error(1);
             rlt=Log(Read(1),Read(1));
             break;
         case 'n':
@@ -98,8 +60,7 @@ Data LogProcessor()
             rlt=Log(rlt,Read(1));
             break;
         default:
-            perror("no such function!\n");
-            exit(-1);
+            return Error(1);
     }
     return rlt;
 }
@@ -107,6 +68,7 @@ Data LogProcessor()
 Data FunctionProcessor()
 {
     Data rlt;
+    rlt.error=0;
     rlt.number.init();
     switch(input){
         case 'a':
@@ -129,8 +91,7 @@ Data FunctionProcessor()
         case 'f':
             rlt=Fac(Read(1));
         default:
-            perror("no such function!\n"); 
-            exit(-1);
+            return 
     }
     return rlt;
 }
@@ -138,12 +99,11 @@ Data FunctionProcessor()
 Data Read(int symbol)
 {
 	Data rlt;
+    rlt.error=0;
     input=getchar();
     if(input=='-'){
-        if(symbol=-1){
-            perror("syntax error!\n");
-            exit(-1);
-        }
+        if(symbol=-1)
+            return Error(2);
         symbol=-1;
         input=getchar();
     }
@@ -162,15 +122,11 @@ Data Read(int symbol)
             rlt=FunctionProcessor();
         }
     }
-    else{
+    else if(input<='9'&&input>='0'){
         //读取数字
         rlt.number.init();
         rlt.symbol=1;
         rlt.point=0;
-        if(input>'9'||input<'0'){
-            perror("syntax error!\n");
-            exit(-1);
-        }
         vector tmp;
         int pointPos=0;
         tmp.init();
@@ -197,6 +153,12 @@ Data Read(int symbol)
             rlt=rlt*FunctionProcessor();
         }
     }
+    else{
+        if(input=='+'||input=='-'||input=='*'||input=='/'||input==')'||input=='^')
+            return Error(2);
+        else
+            return Error(1);
+    }
     rlt.symbol*=symbol;
     //处理幂
     if(input=='^')
@@ -206,50 +168,83 @@ Data Read(int symbol)
 
 void Write(Data x)
 {
-    int end=0;
-    while(!x.number[end]) end++;
-    if(x.symbol<0) putchar('-');
-    for(int i=x.number.size()-1;i>=end;i--){
-        printf("%d",x.number[i]);
-        if(i==x.point) putchar('.');
+    if(x.error){
+        switch (x.error)
+        {
+            case 1:
+                printf("非法的字符！！！\n");
+                break;
+            case 2:
+                printf("语法错误！！！\n");
+                break;
+            case 3:
+                printf("数学错误！！！\n");
+                break;
+            case 4:
+                printf("数字过大！！！\n");
+                break;
+            default:
+                printf("无该错误...\n");
+                break;
+        }
     }
-    putchar('\n');
+    else{
+        int end=0;
+        while(!x.number[end]) end++;
+        if(x.symbol<0) putchar('-');
+        for(int i=x.number.size()-1;i>=end;i--){
+            printf("%d",x.number[i]);
+            if(i==x.point) putchar('.');
+        }
+        putchar('\n');
+    }
 }
 
 Data Cal()
 {
 	Stack *st=Init();
-	Push(st,InitStackMember(Read(1)));
+    Data nowNumber;
+    nowNumber=Read(1);
+	Push(st,InitStackMember(nowNumber));
 	while(input!='\n'&&input!=')'){
+        if(nowNumber.error)
+            return nowNumber;
 		switch(input){
 			case '+':
-                Push(st,InitStackMember(Read(1)));
+                nowNumber=Read(1);
+                Push(st,InitStackMember(nowNumber));
                 break;
 			case '-':
-                Push(st,InitStackMember(Read(-1)));
+                nowNumber=Read(-1);
+                Push(st,InitStackMember(nowNumber));
                 break;
 			case '*':
-                Top(st)->data=(Top(st)->data)*Read(1);
+                nowNumber=Read(1);
+                Top(st)->data=(Top(st)->data)*nowNumber;
                 break;
 			case '/':
-                Top(st)->data=(Top(st)->data)/Read(1);
+                nowNumber=Read(1);
+                Top(st)->data=(Top(st)->data)/nowNumber;
                 break;
             case '%':
-                Top(st)->data=(Top(st)->data)%Read(1);
+                nowNumber=Read(1);
+                Top(st)->data=(Top(st)->data)%nowNumber;
                 break;
 			default:
-                perror("illegal word!\n");
-                exit(-1);
+                free(st);
+                if(input=='(') return Error(2);
+                else return Error(1);
 		}
 	}
     if(input==')') input=getchar();
 	Data rlt;
     rlt.number=0;
     rlt.symbol=1;
+    rlt.error=0;
 	while(!Empty(st)){
 		rlt=rlt+Top(st)->data;
 		Pop(st);
 	}
-    free(st);  //计算完后
+    free(st);  //计算完后释放栈的内存
     return rlt;
 }
