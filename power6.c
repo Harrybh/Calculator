@@ -59,7 +59,7 @@ Data ln(Data base)
 Data Exp(Data base, Data index)
 {
     /*麦克劳林展开：ln(x+1)=x-x^2/2!+x^3/3!-...*/
-    int flag = 1;                                                         //用来决定展开式每一项的正负号
+    int flag = 1,symbol=1;                                                         //用来决定展开式每一项的正负号
     Data result = InttoData(1), now = InttoData(1), final = InttoData(1); // temp存储每一项的值，result是总和
     if (base.symbol < 0)
     {
@@ -76,14 +76,14 @@ Data Exp(Data base, Data index)
                 fenzi = fenzi / InttoData(2);
             }
             if (!point && fenzi.number[0] & 1)
-                final.symbol = -1;
+                symbol = -1;
             else if (point > 0)
                 printf("error");
         }
         else
         {
             if (index.number[0] % 2)
-                final.symbol = -1;
+                symbol = -1;
         }
     }
     else if (IsZero(base))
@@ -99,13 +99,14 @@ Data Exp(Data base, Data index)
         now = now * result / InttoData(i);
         final = final + now;
     }
+    final.symbol=symbol;
     return final;
 }
 
 int main()
 {
     Data x, y;
-    Write(sin(Pi));
+    Write(Sin(Pi));
     Write(ln(E));
     Write(Exp(InttoData(2),InttoData(10)));
     return 0;
