@@ -10,7 +10,7 @@ void Write(Data x)
         putchar('-');
     for (int i = x.number.size() - 1; i >= 0; i--)
     {
-        // if (i < x.point - 50) break;
+         if (i < x.point - 50) break;
         printf("%d", x.number[i]);
         if (x.point && i == x.point)
             putchar('.');
@@ -334,6 +334,8 @@ int FindDiv(const Data &x, const Data &y)
 }
 Data operator/(const Data &a, const Data &b)
 {
+    if(IsZero(b))
+        return Error(3);
     Data x, y;
     x = a, y = b;
     Data ans;
@@ -392,6 +394,8 @@ Data operator/(const Data &a, const Data &b)
 
 Data operator%(const Data &x, const Data &yy)
 {
+    if(IsZero(yy))
+        return Error(3);
     Data y = yy;
     y.symbol = 1;
     if (x.number.size() < y.number.size())
@@ -456,21 +460,23 @@ Data Cos(Data x)
 
 Data Tan(Data x)
 {
+    Data cosans=Cos(x);
+    if(IsZero(cosans))
+        return Error(3);
     return Sin(x) / Cos(x);
 }
 
 Data Fac(Data x)
 {
     if(x.symbol<0||x.point!=0){
-        perror("algorithmic error!\n");
-        exit(-1);
+        return Error(3);
     }
     Data rlt=x;
     Data one=InttoData(1);
     for(Data i=x-one;i>=one;i=i-one){
         rlt=rlt*i;
         if(rlt.number.size()>100);
-            //error
+            return Error(4);
     }
     return rlt;
 }
@@ -499,7 +505,7 @@ Data Ln(Data base)
         return result * InttoData(2);
     }
     else{
-        return Error(1);
+        return Error(3);
     }
 }
 
@@ -525,7 +531,7 @@ Data Exp(Data base, Data index)
             if (!point && fenzi.number[0] & 1)
                 final.symbol = -1;
             else if (point > 0)
-                printf("error");
+                return Error(3);
         }
         else
         {
@@ -536,7 +542,7 @@ Data Exp(Data base, Data index)
     else if (IsZero(base))
     {
         if (IsZero(index) || index.symbol < 0)
-            printf("error");
+            return Error(3);
         else
             return InttoData(0);
     }
@@ -551,6 +557,8 @@ Data Exp(Data base, Data index)
 
 Data Sqrt(Data x)
 {
+    if(IsZero(x))
+        return Error(3);
     Data half;
     half=InttoData(5);
     half.number.push_back(0);

@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#include"data.h"
+#include"operation.h"
 
 //处理不同类型的对数函数
 Data LogProcessor();
@@ -14,6 +14,8 @@ Data FunctionProcessor();
 识别^幂符号，并返回幂函数值。
 */
 Data Read(int symbol);
+//输出
+void Write(Data x)
 /*
 识别Read后input的字符(+ - * / %)，并改变栈中的值（* / %)或向栈内加入新元素(+ -);
 以+ - * / %运算为基础，进行计算;
@@ -26,7 +28,6 @@ Data Read(int symbol);
 当读取到-时，向栈中加入-后面的数字的相反数。
 所有字符读取完后，将栈中元素一一相加，得到最终结果。
 */
-void Write(Data x)
 Data Cal();
 
 //用于获取输入的字符
@@ -51,13 +52,15 @@ Data LogProcessor()
     {
         case 'o':
             if(getchar()!='g') return Error(1);
-            rlt=Log(Read(1),Read(1));
+            Data x,y;
+            x=Ln(Read(1)),y=Ln(Read(1));
+            rlt=y/x;
             break;
         case 'n':
-            rlt=Log(E,Read(1));
+            rlt=Ln(Read(1));
             break;
         case 'g':
-            rlt=Log(rlt,Read(1));
+            rlt=Ln(Read(1))/Ln(InttoData(10));
             break;
         default:
             return Error(1);
@@ -72,26 +75,54 @@ Data FunctionProcessor()
     rlt.number.init();
     switch(input){
         case 'a':
+            if(getchar()!='b')
+                return Error(1);
+            if(getchar()!='s')
+                return Error(1);
             rlt=Abs(Read(1));
         case 's':
-            if(getchar()=='i')
+            if(getchar()=='i'){
+                if(getchar()!='n')
+                    return Error(1);
                 rlt=Sin(Read(1));
-            else
+            }
+            else if(getchar()=='q'){
+                if(getchar()!='r')
+                    return Error(1);
+                if(getchar()!='t')
+                    return Error(1);
                 rlt=Sqrt(Read(1));
+            }
+            else 
+                return Error(1);
             break;
         case 'c':
+            if(getchar()!='o')
+                return Error(1);
+            if(getchar()!='s')
+                return Error(1);
             rlt=Cos(Read(1)); 
             break;
         case 't':
+            if(getchar()!='a')
+                return Error(1);
+            if(getchar()!='n')
+                return Error(1);
             rlt=Tan(Read(1));
             break;
         case 'l':
             rlt=LogProcessor();
             break;
         case 'f':
+            if(getchar()!='a')
+                return Error(1);
+            if(getchar()!='c')
+                return Error(1);
+            if(getchar()!='t')
+                return Error(1);
             rlt=Fac(Read(1));
         default:
-            return 
+            return Error(1);
     }
     return rlt;
 }
@@ -141,6 +172,8 @@ Data Read(int symbol)
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
         if(rlt.point) rlt.point=rlt.number.size()-rlt.point;
+        if(rlt.number.size()>100)
+            return Error(4);
         if(input=='e'){
             rlt=rlt*E;
         }
@@ -150,7 +183,9 @@ Data Read(int symbol)
         }
         else{
             //当读到字母时，对函数进行运算返回函数值
-            rlt=rlt*FunctionProcessor();
+            Data func=FunctionProcessor();
+            if(func.error) return func;
+            rlt=rlt*func;
         }
     }
     else{
