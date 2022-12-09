@@ -8,8 +8,8 @@
 bool IsZero(const Data &x)
 {
     bool flag = true;
-    for (int i = x.number.size()-1; i >= 0 && i < x.number.size()-x.point+50; i--){
-    	if (i < x.point - 50) 
+    for (int i = x.number.size()-1; i >= 0; i--){
+    	if (i < x.point - POINT_LIMIT) 
 			break;
     	if (x.number[i])
             flag = false;
@@ -149,7 +149,7 @@ bool operator>=(const Data &x, const Data &y)
     while (j >= 0)
     {
         if (y.number[j])
-            return true;
+            return false;
         j--;
     }
     return true;
@@ -222,7 +222,6 @@ Data operator+(const Data &x, const Data &y)
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
     IsZero(rlt);
-    ClearZero(rlt);
     return rlt;
 }
 
@@ -274,7 +273,6 @@ Data operator-(const Data &x, const Data &y)
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
     IsZero(rlt);
-    ClearZero(rlt);
     return rlt;
 }
 
@@ -307,7 +305,6 @@ Data operator*(const Data &x, const Data &y)
     while (!rlt.number[rlt.number.size() - 1] && rlt.point + 1 < rlt.number.size())
         rlt.number.pop_back();
     IsZero(rlt);
-    ClearZero(rlt);
     return rlt;
 }
 
@@ -388,7 +385,7 @@ Data operator/(const Data &a, const Data &b)
 Data operator%(const Data &x, const Data &yy)
 {
     Data y = yy;
-    if(IsZero(y))
+    if(IsZero(y)||x.point||y.point)
         return Error(3);
     y.symbol = 1;
     if (x.number.size() < y.number.size())
@@ -476,7 +473,7 @@ Data Fac(Data x)
 
 Data Abs(Data x)
 {
-    x.symbol=x.symbol>0?x.symbol:-x.symbol;
+    x.symbol=x.symbol>=0?x.symbol:-x.symbol;
     x.error=0;
     return x;
 }

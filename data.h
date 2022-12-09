@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdio.h>
 
-#define POINT_LIMIT 80
+#define POINT_LIMIT 100
 
 struct vector //动态数组
 {

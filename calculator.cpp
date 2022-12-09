@@ -53,6 +53,7 @@ Data LogProcessor()
         default:
             return Error(1);
     }
+    return rlt;
 }
 
 Data FunctionProcessor()
@@ -126,8 +127,8 @@ Data Read(int symbol)
 	Data rlt;
     input=getchar();
     if(input=='-'){
-        if(symbol=-1)
-            return Error(2);
+        if(symbol==-1)
+			return Error(2);
         symbol=-1;
         input=getchar();
     }
@@ -207,15 +208,19 @@ void Write(Data x)
         switch (x.error)
         {
             case 1:
+            	putchar('1');
                 printf("非法的字符！！！\n");
                 break;
             case 2:
+            	putchar('2');
                 printf("语法错误！！！\n");
                 break;
             case 3:
+            	putchar('3');
                 printf("数学错误！！！\n");
                 break;
             case 4:
+            	putchar('4');
                 printf("数字过大！！！\n");
                 break;
             default:
@@ -224,7 +229,14 @@ void Write(Data x)
         }
     }
     else{
-		if(IsZero(x)) x.symbol=1;
+    	bool flag=true;
+		for (int i = x.number.size()-1; i >= 0; i--){
+	    	if (i < x.point - 50) 
+				break;
+	    	if (x.number[i])
+	            flag = false;
+		}
+		if(flag) x.symbol=1;
         if (x.symbol < 0)
             putchar('-');
         for (int i = x.number.size() - 1; i >= 0; i--)
