@@ -4,19 +4,6 @@
 #define PROCESS_TIMES 50
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-void Write(Data x)
-{
-    if (x.symbol < 0)
-        putchar('-');
-    for (int i = x.number.size() - 1; i >= 0; i--)
-    {
-         if (i < x.point - 50) break;
-        printf("%d", x.number[i]);
-        if (x.point && i == x.point)
-            putchar('.');
-    }
-    putchar('\n');
-}
 //判断是否为零
 bool IsZero(Data &x)
 {

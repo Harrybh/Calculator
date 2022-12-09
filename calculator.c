@@ -224,12 +224,14 @@ void Write(Data x)
         }
     }
     else{
-        int end=0;
-        while(!x.number[end]) end++;
-        if(x.symbol<0) putchar('-');
-        for(int i=x.number.size()-1;i>=end;i--){
-            printf("%d",x.number[i]);
-            if(i==x.point) putchar('.');
+        if (x.symbol < 0)
+            putchar('-');
+        for (int i = x.number.size() - 1; i >= 0; i--)
+        {
+            if (i < x.point - 50) break;
+            printf("%d", x.number[i]);
+            if (x.point && i == x.point)
+                putchar('.');
         }
         putchar('\n');
     }
