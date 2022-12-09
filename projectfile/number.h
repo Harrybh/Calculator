@@ -107,6 +107,8 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_answerButton_clicked();
+
 private:
     Ui::Number *ui;
 protected:

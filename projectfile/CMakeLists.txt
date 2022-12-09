@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(Calculator VERSION 0.1 LANGUAGES CXX)
-
+MATH(EXPR stack_size "500*1024*1024")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--stack,${stack_size}")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -27,6 +28,9 @@ set(PROJECT_SOURCES
         number.cpp
         number.ui
         matrixcalc.h
+        operation.h
+        data.h
+        calculator.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

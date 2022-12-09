@@ -1,7 +1,7 @@
-#include "number.h"
 #include "qtextcursor.h"
 #include "ui_number.h"
 #include "matrix.h"
+#include "calculator.h"
 
 void Number::mousePressEvent(QMouseEvent *e)
 {
@@ -85,7 +85,7 @@ void Number::on_eButton_clicked()
 
 void Number::on_factorButton_clicked()
 {
-    QString QStr="!";
+    QString QStr="fact()";
     ui->textEdit->insertPlainText(QStr);
 }
 
@@ -350,5 +350,15 @@ void Number::on_saveButton_clicked()
     QString text = ui->textEdit->toPlainText();//文本框中的内容
     file.write(text.toUtf8());//将text内容转化为字节数组
     file.close();
+}
+
+
+void Number::on_answerButton_clicked()
+{
+    myout=NULL;
+    myinput= ui->textEdit->toPlainText();
+    in.setString(&myinput);
+    Write(Cal());
+    ui->textEdit->setPlainText(myout);
 }
 
