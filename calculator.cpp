@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#include"operation.h"
+#include "operation.h"
 
 //处理不同类型的对数函数
 Data LogProcessor();
@@ -15,7 +15,7 @@ Data FunctionProcessor();
 */
 Data Read(int symbol);
 //输出
-void Write(Data x)
+void Write(Data x);
 /*
 识别Read后input的字符(+ - * / %)，并改变栈中的值（* / %)或向栈内加入新元素(+ -);
 以+ - * / %运算为基础，进行计算;
@@ -35,24 +35,22 @@ char input;
 
 int main()
 {
-    Data rlt,a,b;
-    rlt=Cal();
-    printf("%d\n",rlt.symbol*rlt.number);
+    Data rlt;
+    while(true){
+		rlt=Cal();
+	    Write(rlt);
+	}
     return 0;
 }
 
 Data LogProcessor()
 {
-    Data rlt;
-    rlt.error=0;
-    rlt.number=10;
-    rlt.symbol=1;
+    Data rlt,x,y;
     input=getchar();
     switch (input)
     {
         case 'o':
             if(getchar()!='g') return Error(1);
-            Data x,y;
             x=Ln(Read(1)),y=Ln(Read(1));
             rlt=y/x;
             break;
@@ -65,13 +63,11 @@ Data LogProcessor()
         default:
             return Error(1);
     }
-    return rlt;
 }
 
 Data FunctionProcessor()
 {
-    Data rlt;
-    rlt.error=0;
+    Data rlt,nowNumber;
     rlt.number.init();
     switch(input){
         case 'a':
@@ -79,19 +75,23 @@ Data FunctionProcessor()
                 return Error(1);
             if(getchar()!='s')
                 return Error(1);
-            rlt=Abs(Read(1));
+            nowNumber=Read(1);
+            rlt=Abs(nowNumber);
+            break;
         case 's':
             if(getchar()=='i'){
                 if(getchar()!='n')
                     return Error(1);
-                rlt=Sin(Read(1));
+                nowNumber=Read(1);
+                rlt=Sin(nowNumber);
             }
             else if(getchar()=='q'){
                 if(getchar()!='r')
                     return Error(1);
                 if(getchar()!='t')
                     return Error(1);
-                rlt=Sqrt(Read(1));
+                nowNumber=Read(1);
+                rlt=Sqrt(nowNumber);
             }
             else 
                 return Error(1);
@@ -101,14 +101,16 @@ Data FunctionProcessor()
                 return Error(1);
             if(getchar()!='s')
                 return Error(1);
-            rlt=Cos(Read(1)); 
+            nowNumber=Read(1);
+            rlt=Cos(nowNumber); 
             break;
         case 't':
             if(getchar()!='a')
                 return Error(1);
             if(getchar()!='n')
                 return Error(1);
-            rlt=Tan(Read(1));
+            nowNumber=Read(1);
+            rlt=Tan(nowNumber);
             break;
         case 'l':
             rlt=LogProcessor();
@@ -120,18 +122,22 @@ Data FunctionProcessor()
                 return Error(1);
             if(getchar()!='t')
                 return Error(1);
-            rlt=Fac(Read(1));
+            nowNumber=Read(1);
+            rlt=Fac(nowNumber);
+            break;
         default:
             return Error(1);
     }
+    putchar('b');
+    Write(rlt);
     return rlt;
 }
 
 Data Read(int symbol)
 {
 	Data rlt;
-    rlt.error=0;
     input=getchar();
+	printf("input=%c\n",input);
     if(input=='-'){
         if(symbol=-1)
             return Error(2);
@@ -143,10 +149,15 @@ Data Read(int symbol)
         rlt=Cal();
     }
     else if(input<='z'&&input>='a'){
-        if(input=='e') rlt=E;
+        if(input=='e'){
+			rlt=E;
+			input=getchar();
+		}
         else if(input=='p'){
             rlt=Pi;
+            if(getchar()!='i') return Error(1); 
             input=getchar();
+            printf("input=%c\n",input);
         }
         else{
             //当读到字母时，对函数进行运算返回函数值
@@ -157,6 +168,7 @@ Data Read(int symbol)
         //读取数字
         rlt.number.init();
         rlt.symbol=1;
+        rlt.error=0;
         rlt.point=0;
         vector tmp;
         int pointPos=0;
@@ -168,6 +180,7 @@ Data Read(int symbol)
                 tmp.push_back(input-'0');
             pointPos++;
             input=getchar();
+            printf("input=%c\n",input);
         }
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
@@ -176,14 +189,17 @@ Data Read(int symbol)
             return Error(4);
         if(input=='e'){
             rlt=rlt*E;
+            input=getchar();
         }
         else if(input=='p'){
             rlt=rlt*Pi;
+            if(getchar()!='i') return Error(1); 
             input=getchar();
         }
-        else{
+        else if(input>='a'&&input<='z'){
             //当读到字母时，对函数进行运算返回函数值
             Data func=FunctionProcessor();
+            Write(func);
             if(func.error) return func;
             rlt=rlt*func;
         }
@@ -197,33 +213,43 @@ Data Read(int symbol)
     rlt.symbol*=symbol;
     //处理幂
     if(input=='^')
-        rlt=Pow(rlt,Read(1));
+        rlt=Exp(rlt,Read(1));
+	putchar('a');
+    Write(rlt); 
 	return rlt;
 }
 
 void Write(Data x)
 {
+	printf("error=%d\n",x.error);
+	x.error=0;
     if(x.error){
         switch (x.error)
         {
             case 1:
-                printf("非法的字符！！！\n");
+            	printf("error1\n");
+                //printf("非法的字符！！！\n");
                 break;
             case 2:
-                printf("语法错误！！！\n");
+            	printf("error2\n");
+                //printf("语法错误！！！\n");
                 break;
             case 3:
-                printf("数学错误！！！\n");
+	            printf("error3\n");
+                //printf("数学错误！！！\n");
                 break;
             case 4:
-                printf("数字过大！！！\n");
+	            printf("error4\n");
+                //printf("数字过大！！！\n");
                 break;
             default:
-                printf("无该错误...\n");
+            	printf("No error\n");
+                //printf("无该错误...\n");
                 break;
         }
     }
     else{
+		if(IsZero(x)) x.symbol=1;
         if (x.symbol < 0)
             putchar('-');
         for (int i = x.number.size() - 1; i >= 0; i--)
@@ -240,7 +266,7 @@ void Write(Data x)
 Data Cal()
 {
 	Stack *st=Init();
-    Data nowNumber;
+    Data nowNumber,calNumber;
     nowNumber=Read(1);
 	Push(st,InitStackMember(nowNumber));
 	while(input!='\n'&&input!=')'){
@@ -257,15 +283,21 @@ Data Cal()
                 break;
 			case '*':
                 nowNumber=Read(1);
-                Top(st)->data=(Top(st)->data)*nowNumber;
+                calNumber=(Top(st)->data)*nowNumber;
+                if(calNumber.error) return calNumber;
+                Top(st)->data=calNumber;
                 break;
 			case '/':
                 nowNumber=Read(1);
-                Top(st)->data=(Top(st)->data)/nowNumber;
+                calNumber=(Top(st)->data)/nowNumber;
+                if(calNumber.error) return calNumber;
+                Top(st)->data=calNumber;
                 break;
             case '%':
                 nowNumber=Read(1);
-                Top(st)->data=(Top(st)->data)%nowNumber;
+                calNumber=(Top(st)->data)%nowNumber;
+                if(calNumber.error) return calNumber;
+                Top(st)->data=calNumber;
                 break;
 			default:
                 free(st);
@@ -275,8 +307,7 @@ Data Cal()
 	}
     if(input==')') input=getchar();
 	Data rlt;
-    rlt.number=0;
-    rlt.symbol=1;
+    rlt=InttoData(0);
     rlt.error=0;
 	while(!Empty(st)){
 		rlt=rlt+Top(st)->data;

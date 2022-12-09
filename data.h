@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdio.h>
 
-#define POINT_LIMIT 100
+#define POINT_LIMIT 80
 
 struct vector //动态数组
 {
@@ -119,6 +119,7 @@ typedef struct Data
         number = b.number;
         point = b.point;
         symbol = b.symbol;
+        error =b.error;
         return (*this);
     }
 }Data;

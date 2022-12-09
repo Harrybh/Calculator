@@ -3,16 +3,58 @@
 
 #define PROCESS_TIMES 50
 
+void write(Data x)
+{
+    if(x.error){
+        switch (x.error)
+        {
+            case 1:
+            	printf("error1\n");
+                //printf("非法的字符！！！\n");
+                break;
+            case 2:
+            	printf("error2\n");
+                //printf("语法错误！！！\n");
+                break;
+            case 3:
+	            printf("error3\n");
+                //printf("数学错误！！！\n");
+                break;
+            case 4:
+	            printf("error4\n");
+                //printf("数字过大！！！\n");
+                break;
+            default:
+            	printf("No error\n");
+                //printf("无该错误...\n");
+                break;
+        }
+    }
+    else{
+        if (x.symbol < 0)
+            putchar('-');
+        for (int i = x.number.size() - 1; i >= 0; i--)
+        {
+            if (i < x.point - 50) break;
+            printf("%d", x.number[i]);
+            if (x.point && i == x.point)
+                putchar('.');
+        }
+        putchar('\n');
+    }
+}
+
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 //判断是否为零
-bool IsZero(Data &x)
+bool IsZero(const Data &x)
 {
     bool flag = true;
-    for (int i = 0; i < x.number.size(); i++)
-        if (x.number[i])
+    for (int i = x.number.size()-1; i >= 0 && i < x.number.size()-x.point+50; i--){
+    	if (i < x.point - 50) 
+			break;
+    	if (x.number[i])
             flag = false;
-    if (flag)
-        x.symbol = 1;
+	}
     return flag;
 }
 //清楚小数点后多余的零
@@ -24,6 +66,7 @@ void ClearZero(Data &x)
     y.number.init();
     y.point = POINT_LIMIT;
     y.symbol = x.symbol;
+    y.error=0;
     bool flag = 0;
     for (int i = x.point - POINT_LIMIT; i < x.number.Len; i++)
     {
@@ -168,6 +211,7 @@ Data operator+(const Data &x, const Data &y)
         return x - Posy;
     }
     Data rlt;
+    rlt.error=0;
     rlt.number.init();
     rlt.symbol = x.symbol;
     vector left, right;
@@ -238,6 +282,7 @@ Data operator-(const Data &x, const Data &y)
         return x + Posy;
     }
     Data rlt;
+    rlt.error=0;
     vector left, right;
     int leftPoint, rightPoint;
     left.init();
@@ -277,6 +322,7 @@ Data operator-(const Data &x, const Data &y)
 Data operator*(const Data &x, const Data &y)
 {
     Data rlt;
+    rlt.error=0;
     rlt.number.init();
     rlt.point = x.point + y.point; // 小数点
     rlt.symbol = x.symbol * y.symbol;
@@ -321,11 +367,12 @@ int FindDiv(const Data &x, const Data &y)
 }
 Data operator/(const Data &a, const Data &b)
 {
-    if(IsZero(b))
-        return Error(3);
     Data x, y;
     x = a, y = b;
+    if(IsZero(y))
+        return Error(3);
     Data ans;
+    ans.error=0;
     Data rlt = InttoData(0);
     x.symbol = y.symbol = 1;
     while (!x.number[x.number.size() - 1] && rlt.point + 1 < rlt.number.size())
@@ -381,13 +428,14 @@ Data operator/(const Data &a, const Data &b)
 
 Data operator%(const Data &x, const Data &yy)
 {
-    if(IsZero(yy))
-        return Error(3);
     Data y = yy;
+    if(IsZero(y))
+        return Error(3);
     y.symbol = 1;
     if (x.number.size() < y.number.size())
         return InttoData(0);
     Data rlt = InttoData(0), newX = x;
+    rlt.error=0;
     for (int i = x.number.size() - 1; i >= y.number.size() - 1; i--)
     {
         Data now;
@@ -423,6 +471,7 @@ Data Sin(Data x)
         else
             finalAns = finalAns + nowNumber;
     }
+    finalAns.error=0;
     return finalAns;
 }
 
@@ -430,18 +479,15 @@ Data Cos(Data x)
 {
     Data nowNumber = x * x / InttoData(2);
     Data finalAns = InttoData(1) - nowNumber;
-    Write(nowNumber);
     for (int i = 2; i <= PROCESS_TIMES; i++)
     {
         nowNumber = nowNumber * x * x / InttoData(i << 1) / InttoData(i * 2 - 1);
-        printf("now:\n");
-        Write(nowNumber);
         if (i & 1)
             finalAns = finalAns - nowNumber;
         else
             finalAns = finalAns + nowNumber;
-        Write(finalAns);
     }
+    finalAns.error=0;
     return finalAns;
 }
 
@@ -460,17 +506,20 @@ Data Fac(Data x)
     }
     Data rlt=x;
     Data one=InttoData(1);
+    putchar('x');
     for(Data i=x-one;i>=one;i=i-one){
         rlt=rlt*i;
-        if(rlt.number.size()>100);
+        if(rlt.number.size()>100)
             return Error(4);
     }
+    rlt.error=0;
     return rlt;
 }
 
 Data Abs(Data x)
 {
     x.symbol=x.symbol>0?x.symbol:-x.symbol;
+    x.error=0;
     return x;
 }
 
