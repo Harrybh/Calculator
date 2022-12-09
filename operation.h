@@ -3,47 +3,6 @@
 
 #define PROCESS_TIMES 50
 
-void write(Data x)
-{
-    if(x.error){
-        switch (x.error)
-        {
-            case 1:
-            	printf("error1\n");
-                //printf("非法的字符！！！\n");
-                break;
-            case 2:
-            	printf("error2\n");
-                //printf("语法错误！！！\n");
-                break;
-            case 3:
-	            printf("error3\n");
-                //printf("数学错误！！！\n");
-                break;
-            case 4:
-	            printf("error4\n");
-                //printf("数字过大！！！\n");
-                break;
-            default:
-            	printf("No error\n");
-                //printf("无该错误...\n");
-                break;
-        }
-    }
-    else{
-        if (x.symbol < 0)
-            putchar('-');
-        for (int i = x.number.size() - 1; i >= 0; i--)
-        {
-            if (i < x.point - 50) break;
-            printf("%d", x.number[i]);
-            if (x.point && i == x.point)
-                putchar('.');
-        }
-        putchar('\n');
-    }
-}
-
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 //判断是否为零
 bool IsZero(const Data &x)
@@ -506,7 +465,6 @@ Data Fac(Data x)
     }
     Data rlt=x;
     Data one=InttoData(1);
-    putchar('x');
     for(Data i=x-one;i>=one;i=i-one){
         rlt=rlt*i;
         if(rlt.number.size()>100)

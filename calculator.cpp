@@ -33,16 +33,6 @@ Data Cal();
 //用于获取输入的字符
 char input;
 
-int main()
-{
-    Data rlt;
-    while(true){
-		rlt=Cal();
-	    Write(rlt);
-	}
-    return 0;
-}
-
 Data LogProcessor()
 {
     Data rlt,x,y;
@@ -128,8 +118,6 @@ Data FunctionProcessor()
         default:
             return Error(1);
     }
-    putchar('b');
-    Write(rlt);
     return rlt;
 }
 
@@ -137,7 +125,6 @@ Data Read(int symbol)
 {
 	Data rlt;
     input=getchar();
-	printf("input=%c\n",input);
     if(input=='-'){
         if(symbol=-1)
             return Error(2);
@@ -157,7 +144,6 @@ Data Read(int symbol)
             rlt=Pi;
             if(getchar()!='i') return Error(1); 
             input=getchar();
-            printf("input=%c\n",input);
         }
         else{
             //当读到字母时，对函数进行运算返回函数值
@@ -180,7 +166,6 @@ Data Read(int symbol)
                 tmp.push_back(input-'0');
             pointPos++;
             input=getchar();
-            printf("input=%c\n",input);
         }
         for(int i=tmp.size()-1;i>=0;i--)
             rlt.number.push_back(tmp[i]);
@@ -199,7 +184,6 @@ Data Read(int symbol)
         else if(input>='a'&&input<='z'){
             //当读到字母时，对函数进行运算返回函数值
             Data func=FunctionProcessor();
-            Write(func);
             if(func.error) return func;
             rlt=rlt*func;
         }
@@ -214,37 +198,28 @@ Data Read(int symbol)
     //处理幂
     if(input=='^')
         rlt=Exp(rlt,Read(1));
-	putchar('a');
-    Write(rlt); 
 	return rlt;
 }
 
 void Write(Data x)
 {
-	printf("error=%d\n",x.error);
-	x.error=0;
     if(x.error){
         switch (x.error)
         {
             case 1:
-            	printf("error1\n");
-                //printf("非法的字符！！！\n");
+                printf("非法的字符！！！\n");
                 break;
             case 2:
-            	printf("error2\n");
-                //printf("语法错误！！！\n");
+                printf("语法错误！！！\n");
                 break;
             case 3:
-	            printf("error3\n");
-                //printf("数学错误！！！\n");
+                printf("数学错误！！！\n");
                 break;
             case 4:
-	            printf("error4\n");
-                //printf("数字过大！！！\n");
+                printf("数字过大！！！\n");
                 break;
             default:
-            	printf("No error\n");
-                //printf("无该错误...\n");
+                printf("无该错误...\n");
                 break;
         }
     }
